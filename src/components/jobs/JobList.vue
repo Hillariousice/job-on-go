@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
 import JobListing from './JobListing.vue';
-import { reactive, defineProps, onMounted } from 'vue';
-// import PulseLoader from 'vue-spinner';
+import { reactive, defineProps, onMounted, ref } from 'vue';
+import Loading from 'vue-loading-overlay';
 import axios from 'axios';
 
 
@@ -39,10 +39,10 @@ const state = reactive<{
   isLoading: true,
 });
 
-
+const isLoading = ref(false);
 onMounted(async () => {
   try {
-    const response = await axios.get('../jobs.json');
+    const response = await axios.get('http://localhost:5000/jobs');
     state.jobs = response.data;
   } catch (error) {
     console.error('Error fetching jobs', error);
@@ -60,7 +60,7 @@ onMounted(async () => {
       </h2>
       <!-- Show loading spinner while loading is true -->
       <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
-        <PulseLoader />
+        <Loading v-model:active="isLoading" :is-full-page="true"/>
       </div>
 
       <!-- Show job listing when done loading -->

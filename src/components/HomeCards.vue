@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import CustomCard from '@/components/CustomCard.vue'
+import CustomCard from '@/components/custom/CustomCard.vue'
 </script>
 
 <template>

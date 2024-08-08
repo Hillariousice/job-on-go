@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import CustomHero from '@/components/CustomHero.vue';
+import CustomHero from '@/components/custom/CustomHero.vue';
 import  HomeCards from '@/components/HomeCards.vue'
-import JobList from '@/components/JobList.vue';
+import JobList from '@/components/jobs/JobList.vue';
 </script>
 
 <template>

@@ -19,7 +19,7 @@ const handleLogin = () => {
       
       <div class="mb-4 relative">
         <label for="email" class="block text-gray-700">Email</label>
-        <i class="pi pi-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-envelope absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="email"
           type="email" 
