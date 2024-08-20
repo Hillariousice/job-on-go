@@ -1,23 +1,52 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
-
+import { signup } from '@/api/auth/signup';
+import type { User, Role, EmploymentStatus } from '@/types/user'; 
+import { useToast } from 'vue-toast-notification';
+import router from '@/router';
+const toast = useToast();
 const firstName = ref('');
 const lastName = ref('');
 const phone = ref('');
 const email = ref('');
 const password = ref('');
+const address = ref('');
+const country = ref('');
+const profileImage = ref('');
+const employmentStatus = ref<EmploymentStatus>('unemployed');
+const status = ref('active');
+const role = ref<Role>('user');
 
-const handleSignup = () => {
-  // Add your signup logic here
-  console.log('First Name:', firstName.value);
-  console.log('Last Name:', lastName.value);
-  console.log('Phone:', phone.value);
-  console.log('Email:', email.value);
-  console.log('Password:', password.value);
+const handleSignup = async () => {
+  const userInfo: Omit<User, 'id' | 'created_at' | 'updated_at' | 'deleted_at' | 'token'> = {
+    name: `${firstName.value} ${lastName.value}`,
+    email: email.value,
+    password: password.value,
+    phone: phone.value,
+    address: address.value,
+    role: role.value,
+    email_verified: false,
+    country: country.value,
+    status: status.value,
+    profileImage: profileImage.value,
+    employmentStatus: employmentStatus.value,
+  };
 
+  const result = await signup(userInfo);
+
+  if (result.success) {
+    toast.success('UserAdded Successfully');
+    console.log('Signup successful:', result.user);
+    router.push(`/dashboard`);
+  } else {
+    console.error('Signup failed:', result.error);
+    toast.error('User Was Not Added');
+   
+  }
 };
 </script>
+
 
 <template>
   <div class="flex justify-center items-center min-h-screen bg-gray-100">
@@ -44,7 +73,7 @@ const handleSignup = () => {
           id="last-name" 
           class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600" 
           required 
-        />
+        />  
       </div>
       <div class="mb-4 relative">
         <label for="phone" class="block text-gray-700">Phone</label>

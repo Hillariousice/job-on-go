@@ -1,14 +1,25 @@
 <script setup lang="ts">
+import { login } from '@/api/auth';
+import router from '@/router';
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 const email = ref('');
 const password = ref('');
 
-const handleLogin = () => {
-  // Add your login logic here
-  console.log('Email:', email.value);
-  console.log('Password:', password.value);
+const handleLogin = async () => {
+  try {
+    const result = await login(email.value, password.value);
+    if (result && result.success) {
+      console.log('Login successful:', result.user);
+      
+      router.push('/dashboard'); 
+    } else {
+      console.error('Login failed');
+    }
+  } catch (error) {
+    console.error('Error during login:', error);
+  }
 };
 </script>
 
