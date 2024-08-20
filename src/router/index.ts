@@ -5,8 +5,10 @@ import LoginView from "@/views/auth/LoginView.vue";
 import NotFoundView from "@/views/NotFoundView.vue";
 import JobView from "@/views/jobs/JobView.vue";
 import SingUpView from "@/views/auth/SingUpView.vue";
-// import AddJobView from "@/views/jobs/AddJobView.vue";
+import AddJobView from "@/views/jobs/AddJobView.vue";
+import UserDashboard from "@/views/DashboardView.vue";
 import EditJobView from "@/views/jobs/EditJobView.vue";
+import { getAuth } from "firebase/auth";
 
 const  router = createRouter({
    history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,11 +37,14 @@ const  router = createRouter({
       name: 'job',
       component: JobView
      },
-    //  {
-    //   path: '/jobs/add',
-    //   name: 'add-job',
-    //   component: AddJobView,
-    // },
+     {
+      path: '/jobs/add',
+      name: 'add-job',
+      component: AddJobView,
+    },
+    { path: '/dashboard', 
+      component: UserDashboard,
+       meta: { requiresAuth: true } },
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
@@ -52,5 +57,15 @@ const  router = createRouter({
      },
 ]
 });
+router.beforeEach((to, from, next) => {
+   const auth = getAuth();
+   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+ 
+   if (requiresAuth && !auth.currentUser) {
+     next('/login');
+   } else {
+     next();
+   }
+ });
 
 export default  router;

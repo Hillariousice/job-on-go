@@ -5,53 +5,47 @@ import { signup } from '@/api/auth/signup';
 import type { User, Role, EmploymentStatus } from '@/types/user'; 
 import { useToast } from 'vue-toast-notification';
 import router from '@/router';
+
 const toast = useToast();
 const firstName = ref('');
 const lastName = ref('');
 const phone = ref('');
 const email = ref('');
 const password = ref('');
-const address = ref('');
-const country = ref('');
-const profileImage = ref('');
-const employmentStatus = ref<EmploymentStatus>('unemployed');
-const status = ref('active');
-const role = ref<Role>('user');
+
 
 const handleSignup = async () => {
-  const userInfo: Omit<User, 'id' | 'created_at' | 'updated_at' | 'deleted_at' | 'token'> = {
-    name: `${firstName.value} ${lastName.value}`,
+  const userInfo = {
+    firstName: firstName.value,
+    lastName: lastName.value,
     email: email.value,
     password: password.value,
     phone: phone.value,
-    address: address.value,
-    role: role.value,
-    email_verified: false,
-    country: country.value,
-    status: status.value,
-    profileImage: profileImage.value,
-    employmentStatus: employmentStatus.value,
+    email_verified: false, 
+    created_at: new Date().toISOString(), 
+    updated_at: new Date().toISOString(),
+    token: '' 
   };
 
   const result = await signup(userInfo);
 
-  if (result.success) {
-    toast.success('UserAdded Successfully');
-    console.log('Signup successful:', result.user);
+  if (result?.success) {
+    toast.success('User added successfully');
+    console.log('Signup successful:', result?.user);
     router.push(`/dashboard`);
   } else {
-    console.error('Signup failed:', result.error);
-    toast.error('User Was Not Added');
-   
+    console.error('Signup failed');
+    toast.error('User was not added');
   }
 };
+
 </script>
 
 
 <template>
   <div class="flex justify-center items-center min-h-screen bg-gray-100">
     <form @submit.prevent="handleSignup" class="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
-      <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+      <h2 class="text-2xl font-bold mb-6 text-center">SignUp</h2>
       
       <div class="mb-4 relative">
         <label for="first-name" class="block text-gray-700">First Name</label>

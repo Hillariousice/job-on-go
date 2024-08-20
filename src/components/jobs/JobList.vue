@@ -4,6 +4,8 @@ import JobListing from './JobListing.vue';
 import { reactive, defineProps, onMounted, ref } from 'vue';
 import Loading from 'vue-loading-overlay';
 import axios from 'axios';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
 
 
 interface Job {
@@ -42,8 +44,11 @@ const state = reactive<{
 const isLoading = ref(false);
 onMounted(async () => {
   try {
-    const response = await axios.get('http://localhost:5000/jobs');
-    state.jobs = response.data;
+    const querySnapshot = await getDocs(collection(db, 'jobs'));
+    state.jobs = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data() as Omit<Job, 'id'>
+    }));
   } catch (error) {
     console.error('Error fetching jobs', error);
   } finally {

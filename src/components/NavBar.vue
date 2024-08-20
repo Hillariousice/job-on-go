@@ -1,91 +1,88 @@
 <script setup lang="ts">
 import { RouterLink, useRoute, useRouter } from 'vue-router';
-import logo from '@/assets/travelguide-high-resolution-logo-transparent.png'
+import logo from '@/assets/travelguide-high-resolution-logo-transparent.png';
 import { onMounted, ref } from 'vue';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
-const isAuthenticated = ref(true);  // Change this to false to see the login page
+const isAuthenticated = ref(false);
 const userProfile = ref({
-  name: "John Doe",
-  profilePicture: "https://via.placeholder.com/150"
+  name: "",
+  profilePicture: ""
 });
 
 const router = useRouter();
 const isDropdownOpen = ref(false);
 
+const auth = getAuth();  // Initialize Firebase Auth
+
+// Check if the current route is active
 const isActiveLink = (routePath: string) => {
   const route = useRoute();
   return route.path === routePath;
 };
 
+// Check the authentication state using Firebase
 const checkAuth = () => {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    // You might want to verify the token with the backend to ensure it's still valid
-    isAuthenticated.value = true;
-  } else {
-    isAuthenticated.value = false;
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthenticated.value = true;
+      userProfile.value = {
+        name: user.displayName || "User",
+        profilePicture: user.photoURL || "https://via.placeholder.com/150"
+      };
+    } else {
+      isAuthenticated.value = false;
+      userProfile.value = { name: "", profilePicture: "" };
+    }
+  });
 };
+
+// Logout function using Firebase
+const logout = () => {
+  signOut(auth).then(() => {
+    isAuthenticated.value = false;
+    userProfile.value = { name: "", profilePicture: "" };
+    router.push('/login');
+  }).catch((error) => {
+    console.error("Error logging out:", error);
+  });
+};
+
+// Run onMounted lifecycle hook to check auth
 onMounted(() => {
   checkAuth();
 });
-
-const logout = () => {
-  // Clear any stored tokens (adjust based on your auth setup)
-  localStorage.removeItem('authToken');
-  sessionStorage.removeItem('authToken');
-  document.cookie = "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-  // Reset the authentication state
-  isAuthenticated.value = false;
-  userProfile.value = { name: "", profilePicture: "" };
-
-  // Redirect to the login page
-  router.push('/login');
-};
-
 </script>
 
 <template>
-     <nav class="bg-purple-700 border-b border-purple-500">
+  <nav class="bg-purple-700 border-b border-purple-500">
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="flex h-20 items-center justify-between">
-        <div
-          class="flex flex-1 items-center justify-center md:items-stretch md:justify-start"
-        >
+        <div class="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
           <!-- Logo -->
-          <RouterLink class="flex flex-shrink-0 items-center mr-6" to="/">
+          <RouterLink class="flex flex-shrink-0 items-center mr-6" :to="isAuthenticated ? '/dashboard' : '/'">
             <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
-            
           </RouterLink>
           <div class="md:ml-auto flex space-x-4">
             <div class="flex space-x-2">
               <RouterLink
-                to="/"
+                :to="isAuthenticated ? '/dashboard' : '/'"
                 :class="[
-                  isActiveLink('/')
+                  isActiveLink(isAuthenticated ? '/dashboard' : '/')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white',
-                  'px-3',
-                  'py-2',
-                  'rounded-md',
+                  'text-white', 'px-3', 'py-2', 'rounded-md',
                 ]"
-                >Home</RouterLink
-              >
+              >{{ isAuthenticated ? 'Dashboard' : 'Home' }}</RouterLink>
               <RouterLink
                 to="/jobs"
                 :class="[
                   isActiveLink('/jobs')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white',
-                  'px-3',
-                  'py-2',
-                  'rounded-md',
+                  'text-white', 'px-3', 'py-2', 'rounded-md',
                 ]"
-                >Jobs</RouterLink
-              >
+              >Jobs</RouterLink>
               <RouterLink
                 to="/jobs/add"
                 v-if="isAuthenticated"
@@ -93,30 +90,23 @@ const logout = () => {
                   isActiveLink('/jobs/add')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white',
-                  'px-3',
-                  'py-2',
-                  'rounded-md',
+                  'text-white', 'px-3', 'py-2', 'rounded-md',
                 ]"
-                >Add Job</RouterLink
-              >
+              >Add Job</RouterLink>
               <RouterLink
                 to="/login"
+                v-if="!isAuthenticated"
                 :class="[
                   isActiveLink('/login')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white',
-                  'px-3',
-                  'py-2',
-                  'rounded-md',
+                  'text-white', 'px-3', 'py-2', 'rounded-md',
                 ]"
-                >Login</RouterLink
-              >
+              >Login</RouterLink>
               <div v-if="isAuthenticated" class="relative flex items-center">
                 <img :src="userProfile.profilePicture" alt="Profile" class="h-8 w-8 rounded-full mr-2" />
                 <div class="relative">
-                  <button @click="isDropdownOpen = !isDropdownOpen"  class="text-white px-3 py-2 rounded-md focus:outline-none">
+                  <button @click="isDropdownOpen = !isDropdownOpen" class="text-white px-3 py-2 rounded-md focus:outline-none">
                     <i class="pi pi-cog"></i>
                   </button>
                   <!-- Dropdown -->

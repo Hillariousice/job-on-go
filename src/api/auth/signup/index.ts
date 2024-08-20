@@ -1,29 +1,25 @@
 import { auth, db } from '@/firebaseConfig';
-import type { User, Role, EmploymentStatus } from '@/types/user'; 
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import type { UserSignup } from '@/types/user';
+import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 
-export async function signup(userInfo: Omit<User, 'id' | 'created_at' | 'updated_at' | 'deleted_at' | 'token'>) {
+export async function signup(userInfo: Omit<UserSignup, 'id' | 'created_at' | 'updated_at' | 'token' | 'email_verified'>) {
   try {
+    // Create user with email and password
     const userCredential = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password);
     const user = userCredential.user;
 
-    const userData: User = {
+    // Prepare user data for Firestore
+    const userData: UserSignup = {
       id: user.uid,
-      name: userInfo.name,
+      firstName: userInfo.firstName,
+      lastName: userInfo.lastName,
       email: userInfo.email,
-      phone: userInfo.phone,
-      address: userInfo.address || '',
-      role: userInfo.role as Role,
-      email_verified: user.emailVerified,
       password: userInfo.password,
-      country: userInfo.country || '',
-      status: userInfo.status || 'active',
-      profileImage: userInfo.profileImage || '',
-      employmentStatus: userInfo.employmentStatus as EmploymentStatus,
+      phone: userInfo.phone,
+      email_verified: user.emailVerified,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      deleted_at: '',
       token: user.refreshToken || '',
     };
 
@@ -35,9 +31,12 @@ export async function signup(userInfo: Omit<User, 'id' | 'created_at' | 'updated
       user: userData,
     };
   } catch (error: any) {
-    return {
-      success: false,
-      error: error.message,
-    };
+    const authError = error as AuthError;
+    if (authError.code === 'auth/email-already-in-use') {
+      console.error('Email already in use');
+      // Provide feedback to the user
+    } else {
+      console.error('Signup error:', authError.message);
+    }
   }
 }

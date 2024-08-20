@@ -22,3 +22,16 @@ export interface User {
     deleted_at: string;
     token: string;
 }
+
+export interface UserSignup {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phone: string;
+    email_verified: boolean;
+    created_at: string;
+    updated_at: string;
+    token: string;
+}

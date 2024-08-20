@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import router from '@/router';
 import { reactive, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
-import axios from 'axios';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '@/firebaseConfig';
+import router from '@/router';
 
 interface Job {
   id: string;
@@ -19,9 +20,9 @@ interface Job {
     contactPhone: string;
   }
 }
-const route = useRoute();
 
-const jobId = route.params.id;
+const route = useRoute();
+const jobId = route.params.id as string;
 
 const form = reactive({
   type: 'Full-Time',
@@ -71,9 +72,37 @@ const checkAuth = () => {
   }
 };
 
-onMounted(() => {
+onMounted(async () => {
   checkAuth();
+  await fetchJob();
 });
+
+const fetchJob = async () => {
+  try {
+    const jobDocRef = doc(db, "jobs", jobId);  // Replace "jobs" with your collection name
+    const jobDoc = await getDoc(jobDocRef);
+
+    if (jobDoc.exists()) {
+      state.job = jobDoc.data() as Job;
+      // Populate inputs
+      form.type = state.job.type;
+      form.title = state.job.title;
+      form.description = state.job.description;
+      form.salary = state.job.salary;
+      form.location = state.job.location;
+      form.company.name = state.job.company.name;
+      form.company.description = state.job.company.description;
+      form.company.contactEmail = state.job.company.contactEmail;
+      form.company.contactPhone = state.job.company.contactPhone;
+    } else {
+      console.error('No such job!');
+    }
+  } catch (error) {
+    console.error('Error fetching job', error);
+  } finally {
+    state.isLoading = false;
+  }
+};
 
 const handleSubmit = async () => {
   const updatedJob = {
@@ -91,36 +120,17 @@ const handleSubmit = async () => {
   };
 
   try {
-    const response = await axios.put(`/api/jobs/${jobId}`, updatedJob);
+    const jobDocRef = doc(db, "jobs", jobId);  // Replace "jobs" with your collection name
+    await updateDoc(jobDocRef, updatedJob);
     toast.success('Job Updated Successfully');
-    router.push(`/jobs/${response.data.id}`);
+    router.push(`/jobs/${jobId}`);
   } catch (error) {
-    console.error('Error fetching job', error);
-    toast.error('Job Was Not Added');
+    console.error('Error updating job', error);
+    toast.error('Job Was Not Updated');
   }
 };
-
-onMounted(async () => {
-  try {
-    const response = await axios.get(`/api/jobs/${jobId}`);
-    state.job = response.data;
-    // Populate inputs
-    form.type = state.job.type;
-    form.title = state.job.title;
-    form.description = state.job.description;
-    form.salary = state.job.salary;
-    form.location = state.job.location;
-    form.company.name = state.job.company.name;
-    form.company.description = state.job.company.description;
-    form.company.contactEmail = state.job.company.contactEmail;
-    form.company.contactPhone = state.job.company.contactPhone;
-  } catch (error) {
-    console.error('Error fetching job', error);
-  } finally {
-    state.isLoading = false;
-  }
-});
 </script>
+
 
 <template>
   <section class="bg-green-50">
