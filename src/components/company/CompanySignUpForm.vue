@@ -1,22 +1,22 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { RouterLink } from 'vue-router';
-import { signup } from '@/api/auth/signup';
 import { useToast } from 'vue-toast-notification';
 import router from '@/router';
+import { company_signup } from '@/api/company/signup';
 
 const toast = useToast();
-const firstName = ref('');
-const lastName = ref('');
+const name = ref('');
+const description = ref('');
 const phone = ref('');
 const email = ref('');
 const password = ref('');
 
 
 const handleSignup = async () => {
-  const userInfo = {
-    firstName: firstName.value,
-    lastName: lastName.value,
+  const companyInfo = {
+    name: name.value,
+    description: description.value,
     email: email.value,
     password: password.value,
     phone: phone.value,
@@ -26,10 +26,10 @@ const handleSignup = async () => {
     token: '' 
   };
 
-  const result = await signup(userInfo);
+  const result = await company_signup(companyInfo);
 
   if (result?.success) {
-    toast.success('User added successfully');
+    toast.success('Company added successfully');
     console.log('Signup successful:', result?.user);
     router.push(`/login`);
   } else {
@@ -47,23 +47,23 @@ const handleSignup = async () => {
       <h2 class="text-2xl font-bold mb-6 text-center">SignUp</h2>
       
       <div class="mb-4 relative">
-        <label for="first-name" class="block text-gray-700">First Name</label>
+        <label for="name" class="block text-gray-700">Name</label>
         <i class="pi pi-user absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
-          v-model="firstName"
+          v-model="name"
           type="text" 
-          id="firstName" 
+          id="name" 
           class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600" 
           required 
         />
       </div>
       <div class="mb-4 relative">
-        <label for="last-name" class="block text-gray-700">Last Name</label>
+        <label for="description" class="block text-gray-700">Description</label>
         <i class="pi pi-user absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
-          v-model="lastName"
+          v-model="description"
           type="text" 
-          id="last-name" 
+          id="description" 
           class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600" 
           required 
         />  

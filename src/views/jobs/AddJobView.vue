@@ -22,6 +22,7 @@ const form = reactive({
 
 const toast = useToast();
 const isAuthenticated = ref(false);
+const userId = ref(''); // Add a ref to store the authenticated user ID
 
 const auth = getAuth();
 
@@ -30,6 +31,7 @@ const checkAuth = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isAuthenticated.value = true;
+      userId.value = user.uid; // Store the user ID when authenticated
     } else {
       isAuthenticated.value = false;
       router.push('/login');
@@ -39,6 +41,11 @@ const checkAuth = () => {
 
 // Submit the form and add the job listing to Firestore
 const handleSubmit = async () => {
+  if (!userId.value) {
+    toast.error('User not authenticated');
+    return;
+  }
+
   try {
     const newJob = {
       title: form.title,
@@ -52,7 +59,8 @@ const handleSubmit = async () => {
         contactEmail: form.company.contactEmail,
         contactPhone: form.company.contactPhone,
       },
-      createdAt: new Date(),  // Add a createdAt field to track when the job was added
+      createdAt: new Date(),
+      userId: userId.value,  // Add the user ID to the job document
     };
 
     // Add the new job to Firestore
@@ -70,6 +78,7 @@ onMounted(() => {
   checkAuth();
 });
 </script>
+
 <template>
   <section class="bg-green-50">
     <div class="container m-auto max-w-2xl py-24">
@@ -104,7 +113,7 @@ onMounted(() => {
           <div class="mb-4">
             <label for="salary" class="block text-gray-700 font-bold mb-2">Salary</label>
             <select id="salary" v-model="form.salary" name="salary" class="border rounded w-full py-2 px-3" required>
-              <!-- Add salary ranges -->
+              <option value="Unpaid">Unpaid</option>
               <option value="Under $50K">Under $50K</option>
               <option value="$50K - $60K">$50 - $60K</option>
               <option value="$60K - $70K">$60 - $70K</option>
@@ -153,5 +162,3 @@ onMounted(() => {
     </div>
   </section>
 </template>
-
-

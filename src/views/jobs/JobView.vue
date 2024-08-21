@@ -5,6 +5,7 @@ import { useRoute, RouterLink, useRouter } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 interface Job {
   id: string;
@@ -18,7 +19,8 @@ interface Job {
     description: string;
     contactEmail: string;
     contactPhone: string;
-  }
+  };
+  userId: string;
 }
 
 const route = useRoute();
@@ -44,22 +46,29 @@ const state = reactive<{
       contactEmail: '',
       contactPhone: '',
     },
+    userId: '',
   },
   isLoading: true,
 });
 
 const isAuthenticated = ref(false);
-
+const isOwner = ref(false); 
+const auth = getAuth();
 const checkAuth = () => {
-  const token = localStorage.getItem('authToken');
-  // Basic token check; consider validating with your backend
-  if (token) {
-    isAuthenticated.value = true;
-  } else {
-    isAuthenticated.value = false;
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthenticated.value = true;
+      if (state.job.userId && user.uid === state.job.userId) {
+        isOwner.value = true;
+      } else {
+        isOwner.value = false;
+      }
+    } else {
+      isAuthenticated.value = false;
+      router.push('/login'); 
+    }
+  });
 };
-
 onMounted(() => {
   checkAuth();
   fetchJob();
@@ -133,10 +142,16 @@ const deleteJob = async () => {
             <p class="my-2 bg-purple-100 p-2 font-bold">{{ state.job.company.contactEmail }}</p>
             <h3 class="text-xl">Contact Phone:</h3>
             <p class="my-2 bg-purple-100 p-2 font-bold">{{ state.job.company.contactPhone }}</p>
+            <RouterLink
+              :to="`/jobs/apply/${state.job.id}`"
+              class="bg-purple-500 hover:bg-purple-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+            >
+              Apply Now
+            </RouterLink>
           </div>
 
           <!-- Manage -->
-          <div v-if="isAuthenticated" class="bg-white p-6 rounded-lg shadow-md mt-6">
+          <div v-if="isAuthenticated && isOwner" class="bg-white p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
             <RouterLink
               :to="`/jobs/edit/${state.job.id}`"

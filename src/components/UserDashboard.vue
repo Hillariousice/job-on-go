@@ -53,7 +53,7 @@ const checkAuth = () => {
     if (user) {
       isAuthenticated.value = true;
       userProfile.value = {
-        name: user.displayName || "User",
+        name: user?.email || "User",
         profilePicture: user.photoURL || "https://via.placeholder.com/150"
       };
     } else {
@@ -111,18 +111,24 @@ onMounted(() => {
     <!-- Greeting Section -->
     <div class="flex items-center mb-6">
       <img :src="userProfile.profilePicture" alt="Profile" class="h-12 w-12 rounded-full mr-4" />
-      <h1 class="text-2xl font-bold">Welcome, {{ userProfile.name }}</h1>
+      <h1 class="text-2xl font-bold">Welcome, {{ userProfile?.name }}</h1>
     </div>
 
-    <!-- Search Bar -->
-    <div class="mb-6">
+    <!-- Search Bar with Button beside Input -->
+    <div class="flex mb-6 items-center">
       <input
         v-model="searchQuery"
         @input="filterJobs"
         type="text"
         placeholder="Search for jobs..."
-        class="w-full p-2 border border-gray-300 rounded-md"
+        class="flex-grow p-2 border border-gray-300 rounded-l-md"
       />
+      <button
+        @click="filterJobs"
+        class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-r-md focus:outline-none focus:shadow-outline"
+      >
+        Search
+      </button>
     </div>
 
     <!-- Job Listings -->
@@ -139,6 +145,7 @@ onMounted(() => {
           :job="job"
         />
       </div>
+
       <!-- Add Job Button -->
       <div class="text-center">
         <button
@@ -151,3 +158,4 @@ onMounted(() => {
     </div>
   </div>
 </template>
+

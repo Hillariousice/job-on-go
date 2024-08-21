@@ -5,6 +5,7 @@ import { useToast } from 'vue-toast-notification';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
 import router from '@/router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 interface Job {
   id: string;
@@ -18,14 +19,15 @@ interface Job {
     description: string;
     contactEmail: string;
     contactPhone: string;
-  }
+  };
+  userId: string; // Add userId field to track job ownership
 }
 
 const route = useRoute();
 const jobId = route.params.id as string;
 
 const form = reactive({
-  type: 'Full-Time',
+  type: '',
   title: '',
   description: '',
   salary: '',
@@ -55,28 +57,35 @@ const state = reactive<{
       contactEmail: '',
       contactPhone: '',
     },
+    userId: '', // Initialize userId
   },
   isLoading: true,
 });
 
 const toast = useToast();
 const isAuthenticated = ref(false);
+const isOwner = ref(false); // Add a new ref to check job ownership
+
+const auth = getAuth();
 
 const checkAuth = () => {
-  const token = localStorage.getItem('authToken');
-  if (token) {
-    // Optionally, verify the token with your backend
-    isAuthenticated.value = true;
-  } else {
-    isAuthenticated.value = false;
-  }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      isAuthenticated.value = true;
+      // Check if the logged-in user is the owner of the job
+      if (state.job.userId && user.uid === state.job.userId) {
+        isOwner.value = true;
+      } else {
+        isOwner.value = false;
+      }
+    } else {
+      isAuthenticated.value = false;
+      router.push('/login'); // Redirect to login if not authenticated
+    }
+  });
 };
 
-onMounted(async () => {
-  checkAuth();
-  await fetchJob();
-});
-
+// Fetch the job details from Firestore
 const fetchJob = async () => {
   try {
     const jobDocRef = doc(db, "jobs", jobId);  // Replace "jobs" with your collection name
@@ -94,6 +103,12 @@ const fetchJob = async () => {
       form.company.description = state.job.company.description;
       form.company.contactEmail = state.job.company.contactEmail;
       form.company.contactPhone = state.job.company.contactPhone;
+
+      // Check if the logged-in user is the owner after fetching job data
+      const user = auth.currentUser;
+      if (user && user.uid === state.job.userId) {
+        isOwner.value = true;
+      }
     } else {
       console.error('No such job!');
     }
@@ -104,7 +119,13 @@ const fetchJob = async () => {
   }
 };
 
+// Submit the updated job data to Firestore
 const handleSubmit = async () => {
+  if (!isOwner.value) {
+    toast.error('You are not authorized to update this job.');
+    return;
+  }
+
   const updatedJob = {
     title: form.title,
     type: form.type,
@@ -129,6 +150,11 @@ const handleSubmit = async () => {
     toast.error('Job Was Not Updated');
   }
 };
+
+onMounted(() => {
+  fetchJob();
+  checkAuth();
+});
 </script>
 
 
@@ -138,7 +164,7 @@ const handleSubmit = async () => {
       <div
         class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0"
       >
-        <form v-if="isAuthenticated" @submit.prevent="handleSubmit">
+        <form v-if="isAuthenticated && isOwner" @submit.prevent="handleSubmit">
           <h2 class="text-3xl text-center font-semibold mb-6">Edit Job</h2>
 
           <div class="mb-4">

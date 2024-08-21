@@ -1,3 +1,4 @@
+import CompanySignupView from "@/views/company/CompanySingUpView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "@/views/HomeView.vue";
 import JobsView from "@/views/jobs/JobsView.vue";
@@ -26,6 +27,11 @@ const  router = createRouter({
     path: '/signup',
     name: 'signup',
     component: SingUpView
+   },
+   {
+    path: '/company_signup',
+    name: 'company_signup',
+    component: CompanySignupView  
    },
    {
       path: '/login',
