@@ -10,6 +10,7 @@ import AddJobView from "@/views/jobs/AddJobView.vue";
 import UserDashboard from "@/views/DashboardView.vue";
 import EditJobView from "@/views/jobs/EditJobView.vue";
 import { getAuth } from "firebase/auth";
+import ProfileView from "@/views/settings/ProfileView.vue";
 
 const  router = createRouter({
    history: createWebHistory(import.meta.env.BASE_URL),
@@ -51,6 +52,11 @@ const  router = createRouter({
     { path: '/dashboard', 
       component: UserDashboard,
        meta: { requiresAuth: true } },
+
+    { path: '/profile', 
+        name: 'profile',
+        component: ProfileView,
+         },
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
