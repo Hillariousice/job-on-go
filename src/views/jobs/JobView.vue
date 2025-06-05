@@ -6,7 +6,6 @@ import { useToast } from 'vue-toast-notification';
 import { doc, getDoc, deleteDoc, addDoc, collection, query, where, getCountFromServer } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import BackButton from '@/components/custom/CustomBackButton.vue'; // Ensure BackButton is imported
 
 interface Job {
   id: string;
