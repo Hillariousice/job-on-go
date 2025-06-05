@@ -10,11 +10,13 @@ import {
   doc,
   getDoc,
   updateDoc,
-  DocumentData,
+  // DocumentData will be imported as type-only
 } from 'firebase/firestore';
+import type { DocumentData } from 'firebase/firestore';
 import { useToast } from 'vue-toast-notification';
 import BackButton from '@/components/custom/CustomBackButton.vue';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import type { User } from 'firebase/auth';
 
 interface Applicant {
   id: string; // Application document ID
