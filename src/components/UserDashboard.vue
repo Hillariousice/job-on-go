@@ -59,8 +59,8 @@ const checkAuth = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isAuthenticated.value = true;
-      userProfile.value = {
-        name: user?.displayName || "User",
+      userProfile.value = 
+        name: user?.firstName || "User",
         profilePicture: user.photoURL || "https://via.placeholder.com/150"
       };
     } else {

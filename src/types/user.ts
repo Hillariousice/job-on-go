@@ -30,6 +30,7 @@ export interface UserSignup {
     email: string;
     password: string;
     phone: string;
+    accountType?: 'developer' | 'company'; // Added accountType
     email_verified: boolean;
     created_at: string;
     updated_at: string;
