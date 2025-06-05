@@ -64,7 +64,7 @@ onMounted(async () => {
         Browse Jobs
       </h2>
       <!-- Show loading spinner while loading is true -->
-      <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
+      <div v-if="state.isLoading" class="flex item-center justify-center text-center text-gray-500 py-6">
         <Loading v-model:active="state.isLoading" :is-full-page="true"/>
       </div>
 
