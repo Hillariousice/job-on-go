@@ -65,23 +65,23 @@ onMounted(() => {
       <div class="md:col-span-1">
         <UserProfileDetails />
       </div>
-      <div class="md:col-span-2 space-y-8"> {/* Added space-y-8 for consistent spacing between sections */}
+      <div class="md:col-span-2 space-y-8">
 
         <!-- Section for Company Users: Posted Jobs -->
-        <section v-if="accountType === 'company' || accountType === 'admin'">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4">My Posted Jobs</h3>
+        <section>
+  
           <UserPostedJobs />
         </section>
 
         <!-- Section for Company Users: Applicants Summary -->
         <section v-if="!isLoadingProfile && accountType === 'company'">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4">Summary of Applicants</h3>
+          
           <CompanyApplicantsSummary />
         </section>
 
         <!-- Section for Developer Users: Applied Jobs -->
         <section v-if="accountType === 'developer'">
-          <h3 class="text-2xl font-semibold text-gray-800 mb-4">My Job Applications</h3>
+          
           <DeveloperAppliedJobs />
         </section>
 
