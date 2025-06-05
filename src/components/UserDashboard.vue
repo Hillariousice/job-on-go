@@ -60,7 +60,8 @@ const checkAuth = () => {
     if (user) {
       isAuthenticated.value = true;
       userProfile.value = {
-        name: user.firstName || "User",
+        name: user?.email
+          || "User",
         profilePicture: user.photoURL || "https://via.placeholder.com/150"
       };
     } else {
