@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BackButton from '@/components/custom/CustomBackButton.vue';
-import { reactive, onMounted, ref } from 'vue';
+import { reactive, onMounted, ref, computed } from 'vue';
 import { useRoute, RouterLink, useRouter } from 'vue-router';
 import { useToast } from 'vue-toast-notification';
 import { doc, getDoc, deleteDoc } from 'firebase/firestore';
@@ -52,26 +52,32 @@ const state = reactive<{
 });
 
 const isAuthenticated = ref(false);
-const isOwner = ref(false); 
+const currentUserUID = ref<string | null>(null);
 const auth = getAuth();
+
 const checkAuth = () => {
   onAuthStateChanged(auth, (user) => {
     if (user) {
       isAuthenticated.value = true;
-      if (state.job.userId && user.uid === state.job.userId) {
-        isOwner.value = true;
-      } else {
-        isOwner.value = false;
-      }
+      currentUserUID.value = user.uid;
     } else {
       isAuthenticated.value = false;
+      currentUserUID.value = null;
       router.push('/login'); 
     }
   });
 };
+
+const isOwner = computed(() => {
+  if (!isAuthenticated.value || !currentUserUID.value || !state.job.userId) {
+    return false;
+  }
+  return currentUserUID.value === state.job.userId;
+});
+
 onMounted(() => {
-  checkAuth();
-  fetchJob();
+  checkAuth(); // Sets up auth listener and currentUserUID
+  fetchJob();  // Fetches job data including state.job.userId
 });
 
 const fetchJob = async () => {
