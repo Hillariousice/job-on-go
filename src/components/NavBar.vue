@@ -176,7 +176,6 @@ onMounted(() => {
                 <div class="mt-3 space-y-1">
                   <RouterLink @click="isMobileMenuOpen = false" to="/profile" class="block px-3 py-2 rounded-md text-base font-medium text-purple-200 hover:bg-purple-700 hover:text-white">Profile</RouterLink>
                   <RouterLink @click="isMobileMenuOpen = false" to="/settings" class="block px-3 py-2 rounded-md text-base font-medium text-purple-200 hover:bg-purple-700 hover:text-white">Settings</RouterLink>
-                  <RouterLink @click="isMobileMenuOpen = false" to="/manage-account" class="block px-3 py-2 rounded-md text-base font-medium text-purple-200 hover:bg-purple-700 hover:text-white">Manage Account</RouterLink>
                   <button @click="() => { logout(); isMobileMenuOpen = false; }" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-purple-200 hover:bg-purple-700 hover:text-white">Logout</button>
                 </div>
               </div>
@@ -190,8 +189,7 @@ onMounted(() => {
                   <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20"> {/* Increased z-index for desktop dropdown */}
                     <RouterLink to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</RouterLink>
                     <RouterLink to="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</RouterLink>
-                    <RouterLink to="/manage-account" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Manage Account</RouterLink>
-                    <hr />
+                     <hr />
                     <button @click="logout" class="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</button>
                   </div>
                 </div>
