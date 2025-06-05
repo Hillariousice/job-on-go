@@ -215,7 +215,7 @@ const activeFilterCount = computed(() => {
         type="button"
         aria-label="Open filters"
         :aria-expanded="isFilterDropdownOpen"
-        class="relative p-2 ml-2 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
+        class="relative ml-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
         <i class="pi pi-filter text-gray-600"></i>
         <span v-if="activeFilterCount > 0" class="absolute -top-2 -right-2 bg-purple-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -292,7 +292,7 @@ const activeFilterCount = computed(() => {
 
     <!-- Job Listings -->
     <div class="grid grid-cols-1 gap-4">
-      <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
+      <div v-if="state.isLoading" class="flex item-center text-center justify-center text-gray-500 py-6">
         <Loading v-model:active="state.isLoading" :is-full-page="true" />
       </div>
       <template v-else>
