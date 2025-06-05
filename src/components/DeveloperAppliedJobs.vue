@@ -165,7 +165,7 @@ const getStatusClass = (status: string) => {
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-for="job in appliedJobs" :key="job.jobId"> {/* Assuming jobId is unique enough for key here, or use applicationId if added */}
+          <tr v-for="job in appliedJobs" :key="job.jobId">
             <td class="px-4 py-3 whitespace-nowrap text-sm font-medium text-gray-900">
                <router-link :to="`/jobs/${job.jobId}`" class="text-purple-600 hover:text-purple-800 hover:underline">
                 {{ job.jobTitle }}
