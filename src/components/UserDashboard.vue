@@ -60,7 +60,7 @@ const checkAuth = () => {
     if (user) {
       isAuthenticated.value = true;
       userProfile.value = {
-        name: user?.email || "User",
+        name: user?.firstName || "User",
         profilePicture: user.photoURL || "https://via.placeholder.com/150"
       };
     } else {
@@ -191,7 +191,7 @@ const activeFilterCount = computed(() => {
     <!-- Greeting Section -->
     <div class="flex items-center mb-6">
       <img :src="userProfile.profilePicture" alt="Profile" class="h-10 w-10 rounded-full mr-4" />
-      <h1 class="text-lg font-bold md:text-xl">Welcome, {{ userProfile?.displayName }}</h1>
+      <h1 class="text-lg font-bold md:text-xl">Welcome, {{ userProfile?.name }}</h1>
     </div>
 
     <!-- Search Bar with Button beside Input -->
