@@ -166,6 +166,18 @@ const displayJobs = computed(() => {
   }
   return jobsToDisplay;
 });
+
+// Computed property for active filter count
+const activeFilterCount = computed(() => {
+  let count = 0;
+  if (selectedLocations.value.length > 0) {
+    count++;
+  }
+  if (selectedJobTypes.value.length > 0) {
+    count++;
+  }
+  return count;
+});
 </script>
 
 <style scoped>
@@ -202,7 +214,7 @@ const displayJobs = computed(() => {
         @click="isFilterDropdownOpen = !isFilterDropdownOpen"
         type="button"
         aria-label="Open filters"
-        :aria-expanded="isFilterDropdownOpen.toString()"
+        :aria-expanded="isFilterDropdownOpen"
         class="relative p-2 ml-2 border border-gray-300 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-purple-500"
       >
         <i class="pi pi-filter text-gray-600"></i>
