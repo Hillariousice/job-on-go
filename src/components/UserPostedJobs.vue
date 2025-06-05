@@ -95,7 +95,7 @@ onUnmounted(() => {
   <div class="bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-semibold mb-6 text-purple-600">My Posted Jobs</h2>
 
-    <div v-if="state.isLoading" class="text-center py-6">
+    <div v-if="state.isLoading" class="flex item-center justify-center text-center py-6">
       <Loading v-model:active="state.isLoading" :is-full-page="false" :height="60" :width="60" />
     </div>
 
