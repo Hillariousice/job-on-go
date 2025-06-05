@@ -110,10 +110,10 @@ const deleteJob = async () => {
 <template>
   <BackButton />
   <section v-if="!state.isLoading" class="bg-purple-50">
-    <div class="container m-auto py-10 px-6">
+    <div class="container m-auto py-10 px-4 sm:px-6">
       <div class="grid grid-cols-1 md:grid-cols-70/30 w-full gap-6">
         <main>
-          <div class="bg-white p-6 rounded-lg shadow-md text-center md:text-left">
+          <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md text-center md:text-left">
             <div class="text-gray-500 mb-4">{{ state.job.type }}</div>
             <h1 class="text-3xl font-bold mb-4">{{ state.job.title }}</h1>
             <div class="text-gray-500 mb-4 flex align-middle justify-center md:justify-start">
@@ -122,7 +122,7 @@ const deleteJob = async () => {
             </div>
           </div>
 
-          <div class="bg-white p-6 rounded-lg shadow-md mt-6">
+          <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-purple-800 text-lg font-bold mb-6">Job Description</h3>
             <p class="mb-4">{{ state.job.description }}</p>
             <h3 class="text-purple-800 text-lg font-bold mb-2">Salary</h3>
@@ -133,7 +133,7 @@ const deleteJob = async () => {
         <!-- Sidebar -->
         <aside>
           <!-- Company Info -->
-          <div class="bg-white p-6 rounded-lg shadow-md">
+          <div class="bg-white p-4 sm:p-6 rounded-lg shadow-md">
             <h3 class="text-xl font-bold mb-6">Company Info</h3>
             <h2 class="text-2xl">{{ state.job.company.name }}</h2>
             <p class="my-2">{{ state.job.company.description }}</p>
@@ -151,7 +151,7 @@ const deleteJob = async () => {
           </div>
 
           <!-- Manage -->
-          <div v-if="isAuthenticated && isOwner" class="bg-white p-6 rounded-lg shadow-md mt-6">
+          <div v-if="isAuthenticated && isOwner" class="bg-white p-4 sm:p-6 rounded-lg shadow-md mt-6">
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
             <RouterLink
               :to="`/jobs/edit/${state.job.id}`"
