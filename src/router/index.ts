@@ -9,6 +9,7 @@ import SingUpView from "@/views/auth/SingUpView.vue";
 import AddJobView from "@/views/jobs/AddJobView.vue";
 import UserDashboard from "@/views/DashboardView.vue";
 import EditJobView from "@/views/jobs/EditJobView.vue";
+import ProfileView from "@/views/ProfileView.vue"; // Added ProfileView import
 import { getAuth } from "firebase/auth";
 
 const  router = createRouter({
@@ -55,6 +56,12 @@ const  router = createRouter({
       path: '/jobs/edit/:id',
       name: 'edit-job',
       component: EditJobView,
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: ProfileView,
+      meta: { requiresAuth: true }
     },
    {
       path: '/:catchAll(.*)',
