@@ -9,7 +9,11 @@ import SingUpView from "@/views/auth/SingUpView.vue";
 import AddJobView from "@/views/jobs/AddJobView.vue";
 import UserDashboard from "@/views/DashboardView.vue";
 import EditJobView from "@/views/jobs/EditJobView.vue";
-import ProfileView from "@/views/ProfileView.vue"; // Added ProfileView import
+import ProfileView from "@/views/ProfileView.vue";
+import SettingsView from "@/views/SettingsView.vue";
+import ChangePasswordView from "@/views/settings/ChangePasswordView.vue";
+import HelpView from "@/views/settings/HelpView.vue";
+import ManageAccountView from "@/views/settings/ManageAccountView.vue"; // Added ManageAccountView import
 import { getAuth } from "firebase/auth";
 
 const  router = createRouter({
@@ -61,6 +65,30 @@ const  router = createRouter({
       path: '/profile',
       name: 'profile',
       component: ProfileView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/settings',
+      name: 'settings',
+      component: SettingsView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/settings/change-password',
+      name: 'change-password',
+      component: ChangePasswordView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/settings/help',
+      name: 'settings-help',
+      component: HelpView,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/settings/manage-account',
+      name: 'settings-manage-account',
+      component: ManageAccountView,
       meta: { requiresAuth: true }
     },
    {
