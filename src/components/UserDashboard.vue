@@ -190,8 +190,8 @@ const activeFilterCount = computed(() => {
   <div class="container mx-auto p-4">
     <!-- Greeting Section -->
     <div class="flex items-center mb-6">
-      <img :src="userProfile.profilePicture" alt="Profile" class="h-12 w-12 rounded-full mr-4" />
-      <h1 class="text-2xl font-bold">Welcome, {{ userProfile?.name }}</h1>
+      <img :src="userProfile.profilePicture" alt="Profile" class="h-10 w-10 rounded-full mr-4" />
+      <h1 class="text-lg font-bold md:text-xl">Welcome, {{ userProfile?.name }}</h1>
     </div>
 
     <!-- Search Bar with Button beside Input -->
