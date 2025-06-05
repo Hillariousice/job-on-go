@@ -186,7 +186,7 @@ onMounted(() => {
                   <button @click="isDropdownOpen = !isDropdownOpen" class="text-white px-3 py-2 rounded-md focus:outline-none">
                     <i class="pi pi-cog"></i>
                   </button>
-                  <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20"> {/* Increased z-index for desktop dropdown */}
+                  <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-20">
                     <RouterLink to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</RouterLink>
                     <RouterLink to="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</RouterLink>
                      <hr />
