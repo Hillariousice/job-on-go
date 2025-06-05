@@ -9,6 +9,7 @@ import SingUpView from "@/views/auth/SingUpView.vue";
 import AddJobView from "@/views/jobs/AddJobView.vue";
 import UserDashboard from "@/views/DashboardView.vue";
 import EditJobView from "@/views/jobs/EditJobView.vue";
+import JobApplicantsView from "@/views/company/JobApplicantsView.vue"; // Import the new view
 import ProfileView from "@/views/ProfileView.vue";
 import SettingsView from "@/views/SettingsView.vue";
 import ChangePasswordView from "@/views/settings/ChangePasswordView.vue";
@@ -52,14 +53,24 @@ const  router = createRouter({
       path: '/jobs/add',
       name: 'add-job',
       component: AddJobView,
+      meta: { requiresAuth: true } // Assuming add job also requires auth
     },
-    { path: '/dashboard', 
+    {
+      path: '/dashboard',
       component: UserDashboard,
-       meta: { requiresAuth: true } },
+      meta: { requiresAuth: true }
+    },
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
       component: EditJobView,
+      meta: { requiresAuth: true } // Assuming edit job also requires auth
+    },
+    {
+      path: '/jobs/:jobId/applicants', // Route for viewing applicants
+      name: 'job-applicants',
+      component: JobApplicantsView,
+      meta: { requiresAuth: true } // Requires auth, component handles owner check
     },
     {
       path: '/profile',

@@ -18,6 +18,20 @@ const newPassword = ref('');
 const confirmPassword = ref('');
 const isLoading = ref(false);
 
+const showCurrentPassword = ref(false);
+const showNewPassword = ref(false);
+const showConfirmPassword = ref(false);
+
+const toggleShowCurrentPassword = () => {
+  showCurrentPassword.value = !showCurrentPassword.value;
+};
+const toggleShowNewPassword = () => {
+  showNewPassword.value = !showNewPassword.value;
+};
+const toggleShowConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value;
+};
+
 const handleChangePassword = async () => {
   if (newPassword.value !== confirmPassword.value) {
     toast.error('New passwords do not match.');
@@ -70,39 +84,54 @@ const handleChangePassword = async () => {
     <div class="bg-white p-6 sm:p-8 rounded-lg shadow-md max-w-lg mx-auto">
       <form @submit.prevent="handleChangePassword">
         <!-- Current Password -->
-        <div class="mb-6">
+        <div class="mb-6 relative">
           <label for="currentPassword" class="block text-gray-700 font-bold mb-2">Current Password</label>
           <input
-            type="password"
+            :type="showCurrentPassword ? 'text' : 'password'"
             id="currentPassword"
             v-model="currentPassword"
-            class="border rounded w-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
+          <i
+            :class="['pi', showCurrentPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            @click="toggleShowCurrentPassword"
+            style="margin-top: 0.625rem;"
+          ></i>
         </div>
 
         <!-- New Password -->
-        <div class="mb-6">
+        <div class="mb-6 relative">
           <label for="newPassword" class="block text-gray-700 font-bold mb-2">New Password</label>
           <input
-            type="password"
+            :type="showNewPassword ? 'text' : 'password'"
             id="newPassword"
             v-model="newPassword"
-            class="border rounded w-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
+          <i
+            :class="['pi', showNewPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            @click="toggleShowNewPassword"
+            style="margin-top: 0.625rem;"
+          ></i>
         </div>
 
         <!-- Confirm New Password -->
-        <div class="mb-6">
+        <div class="mb-6 relative">
           <label for="confirmPassword" class="block text-gray-700 font-bold mb-2">Confirm New Password</label>
           <input
-            type="password"
+            :type="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword"
             v-model="confirmPassword"
-            class="border rounded w-full py-3 px-4 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
             required
           />
+          <i
+            :class="['pi', showConfirmPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            @click="toggleShowConfirmPassword"
+            style="margin-top: 0.625rem;"
+          ></i>
         </div>
 
         <!-- Submit Button -->
