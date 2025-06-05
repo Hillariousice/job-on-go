@@ -14,6 +14,10 @@ const props = defineProps({
       id: ''
     })
   },
+  showEditIcon: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const showFullDescription = ref(false);
@@ -33,6 +37,14 @@ const truncatedDescription = computed(() => {
 
 <template>
   <div class="bg-white rounded-xl shadow-md relative">
+    <RouterLink
+      v-if="props.showEditIcon"
+      :to="'/jobs/edit/' + props.job.id"
+      class="absolute top-3 right-3 p-1.5 bg-green-500 text-white rounded-full hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400"
+      aria-label="Edit Job"
+    >
+      <i class="pi pi-pencil text-sm"></i>
+    </RouterLink>
     <div class="p-4">
       <div class="mb-6">
         <div class="text-gray-600 my-2">{{ props.job.type }}</div>
