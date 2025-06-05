@@ -22,7 +22,7 @@ import {
 import { db } from '@/firebaseConfig';
 import { useToast } from 'vue-toast-notification';
 import 'vue-toast-notification/dist/theme-sugar.css';
-import router from '@/router'; // Import router for navigation
+import router from '@/router';
 import CustomBackButton from '@/components/custom/CustomBackButton.vue';
 
 const accountType = ref('');
@@ -30,7 +30,7 @@ const isLoadingAccountType = ref(true);
 const showDeleteConfirmationModal = ref(false);
 const deleteConfirmPassword = ref('');
 const isDeleting = ref(false);
-const isSwitchingAccount = ref(false); // New loading state for account switch
+const isSwitchingAccount = ref(false);
 
 const toast = useToast();
 const auth = getAuth();
@@ -45,41 +45,47 @@ const fetchAccountType = async () => {
       if (userDocSnap.exists() && userDocSnap.data().accountType) {
         accountType.value = userDocSnap.data().accountType;
       } else {
+        // This fallback logic is kept from previous versions.
+        // If 'users' is the single source of truth, this 'company' check might be redundant
+        // or only for very old data migration.
         const companyDocRef = doc(db, 'company', auth.currentUser.uid);
         const companyDocSnap = await getDoc(companyDocRef);
-
         if (companyDocSnap.exists() && companyDocSnap.data().accountType) {
           accountType.value = companyDocSnap.data().accountType;
         } else {
-          accountType.value = 'Unknown';
-          console.warn('Account type not found for user:', auth.currentUser.uid);
+          if (userDocSnap.exists()) { // User doc exists in 'users' but no accountType
+            accountType.value = 'developer'; // Default for existing users without explicit type
+            console.warn(`User ${auth.currentUser.uid} in 'users' has no accountType, defaulting to 'developer'.`);
+          } else { // No document in 'users' or 'company'
+            accountType.value = 'Unknown';
+            console.warn('User document not found or account type missing for user:', auth.currentUser.uid);
+          }
         }
       }
-    } catch (error) {
-      console.error("Error fetching account type:", error);
-      accountType.value = 'Error loading type';
+    } else {
+      accountType.value = 'Not authenticated';
+      console.warn('User not authenticated when fetching account type.');
     }
-  } else {
-    accountType.value = 'Not authenticated';
-    console.warn('User not authenticated when fetching account type.');
+  } catch (error) {
+    console.error("Error fetching account type:", error);
+    accountType.value = 'Error loading type';
+  } finally {
+    isLoadingAccountType.value = false;
   }
-  isLoadingAccountType.value = false;
 };
 
 onMounted(() => {
-  if (auth.currentUser) { // Check current user directly from auth
-    fetchAccountType();
-  } else {
-    const unsubscribe = auth.onAuthStateChanged(user => {
-      unsubscribe(); // Unsubscribe after first call
-      if (user) {
-        fetchAccountType();
-      } else {
-        isLoadingAccountType.value = false;
-        accountType.value = 'Not authenticated';
-      }
-    });
-  }
+  const unsubscribe = auth.onAuthStateChanged(user => {
+    unsubscribe(); // Unsubscribe after the first state change to avoid repeated calls if auth state changes later.
+    if (user) {
+      fetchAccountType();
+    } else {
+      isLoadingAccountType.value = false;
+      accountType.value = 'Not authenticated';
+      // Potentially redirect to login if settings pages require auth strictly from the start.
+      // However, router guards should handle this.
+    }
+  });
 });
 
 const initiateAccountSwitch = async () => {
@@ -111,16 +117,10 @@ const initiateAccountSwitch = async () => {
       let newAuthDisplayName = user.displayName || '';
 
       if (newAccountType === 'company') {
-        // Switching from Developer to Company
         updatedData.companyName = (currentData as any).companyName || user.displayName || `${(currentData as any).firstName || ''} ${(currentData as any).lastName || ''}`.trim() || 'New Company';
         newAuthDisplayName = updatedData.companyName;
-        // Clear developer-specific fields (optional, or set to null/empty)
         updatedData.skills = '';
-        // Keep firstName/lastName as potential contact person if desired, or clear them:
-        // updatedData.firstName = '';
-        // updatedData.lastName = '';
       } else {
-        // Switching from Company to Developer
         const firstName = (currentData as any).firstName || '';
         const lastName = (currentData as any).lastName || '';
         if (firstName && lastName) {
@@ -128,10 +128,9 @@ const initiateAccountSwitch = async () => {
         } else if (firstName) {
           newAuthDisplayName = firstName;
         } else {
-          newAuthDisplayName = user.email || 'New User'; // Fallback for displayName
+          newAuthDisplayName = user.email || 'New User';
         }
-        updatedData.displayName = newAuthDisplayName; // Ensure this is set for developer
-        // Clear company-specific fields (optional, or set to null/empty)
+        updatedData.displayName = newAuthDisplayName;
         updatedData.companyName = '';
         updatedData.companyWebsite = '';
         updatedData.companyDescription = '';
@@ -139,12 +138,11 @@ const initiateAccountSwitch = async () => {
 
       await setDoc(userDocRef, updatedData, { merge: true });
 
-      // Update Firebase Auth display name
       if (user.displayName !== newAuthDisplayName) {
         await updateProfile(user, { displayName: newAuthDisplayName });
       }
 
-      accountType.value = newAccountType; // Update local state
+      accountType.value = newAccountType;
       toast.success(`Account type switched to ${newAccountType}. Please review your profile details.`);
       router.push('/profile');
 
@@ -172,11 +170,9 @@ const handleConfirmDelete = async () => {
 
   isDeleting.value = true;
   try {
-    // 1. Re-authenticate user
     const credential = EmailAuthProvider.credential(user.email, deleteConfirmPassword.value);
     await reauthenticateWithCredential(user, credential);
 
-    // 2. Delete user's jobs from Firestore
     const jobsQuery = query(collection(db, 'jobs'), where('userId', '==', user.uid));
     const jobsSnapshot = await getDocs(jobsQuery);
     if (!jobsSnapshot.empty) {
@@ -188,21 +184,19 @@ const handleConfirmDelete = async () => {
       toast.info('User jobs deleted.');
     }
 
-    // 3. Delete user's document from 'users' and 'company' collections
     const userDocRef = doc(db, 'users', user.uid);
     await deleteDoc(userDocRef).catch(e => console.warn("No user doc to delete or error:", e));
 
-    const companyDocRef = doc(db, 'company', user.uid);
+    const companyDocRef = doc(db, 'company', user.uid); // Attempt to delete old company doc if it exists
     await deleteDoc(companyDocRef).catch(e => console.warn("No company doc to delete or error:", e));
     toast.info('User data deleted from Firestore.');
 
-    // 4. Delete user from Firebase Auth
     await deleteUser(user);
 
     toast.success('Account deleted successfully.');
     showDeleteConfirmationModal.value = false;
-    deleteConfirmPassword.value = ''; // Clear password
-    router.push('/'); // Redirect to home or login page
+    deleteConfirmPassword.value = '';
+    router.push('/');
 
   } catch (error: any) {
     console.error('Error deleting account:', error);
