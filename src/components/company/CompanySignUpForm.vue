@@ -43,7 +43,7 @@ const handleSignup = async () => {
 
 <template>
   <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <form @submit.prevent="handleSignup" class="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
+    <form @submit.prevent="handleSignup" class="w-full max-w-sm bg-white p-4 sm:p-6 rounded-lg shadow-md">
       <h2 class="text-2xl font-bold mb-6 text-center">SignUp</h2>
       
       <div class="mb-4 relative">

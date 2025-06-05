@@ -4,6 +4,7 @@ import logo from '@/assets/travelguide-high-resolution-logo-transparent.png';
 import { onMounted, ref } from 'vue';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
+const isMobileMenuOpen = ref(false);
 const isAuthenticated = ref(false);
 const userProfile = ref({
   name: "",
@@ -63,15 +64,67 @@ onMounted(() => {
           <RouterLink class="flex flex-shrink-0 items-center mr-6" :to="isAuthenticated ? '/dashboard' : '/'">
             <img class="h-10 w-auto" :src="logo" alt="Vue Jobs" />
           </RouterLink>
-          <div class="md:ml-auto flex space-x-4">
-            <div class="flex space-x-2">
+
+          <!-- Mobile menu button -->
+          <div class="md:hidden flex items-center">
+            <button
+              @click="isMobileMenuOpen = !isMobileMenuOpen"
+              type="button"
+              class="inline-flex items-center justify-center p-2 rounded-md text-purple-300 hover:text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+            >
+              <span class="sr-only">Open main menu</span>
+              <!-- Icon when menu is closed. -->
+              <svg
+                :class="{ 'hidden': isMobileMenuOpen, 'block': !isMobileMenuOpen }"
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <!-- Icon when menu is open. -->
+              <svg
+                :class="{ 'hidden': !isMobileMenuOpen, 'block': isMobileMenuOpen }"
+                class="h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            :class="{ 'block': isMobileMenuOpen, 'hidden': !isMobileMenuOpen }"
+            class="md:flex md:ml-auto md:space-x-4"
+            id="mobile-menu"
+          >
+            <div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 px-2 pt-2 pb-3 sm:px-3">
               <RouterLink
                 :to="isAuthenticated ? '/dashboard' : '/'"
                 :class="[
                   isActiveLink(isAuthenticated ? '/dashboard' : '/')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white', 'px-3', 'py-2', 'rounded-md',
+                  'text-white', 'block', 'px-3', 'py-2', 'rounded-md', 'text-base', 'font-medium'
                 ]"
               >{{ isAuthenticated ? 'Dashboard' : 'Home' }}</RouterLink>
               <RouterLink
@@ -80,7 +133,7 @@ onMounted(() => {
                   isActiveLink('/jobs')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white', 'px-3', 'py-2', 'rounded-md',
+                  'text-white', 'block', 'px-3', 'py-2', 'rounded-md', 'text-base', 'font-medium'
                 ]"
               >Jobs</RouterLink>
               <RouterLink
@@ -90,27 +143,45 @@ onMounted(() => {
                   isActiveLink('/jobs/add')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white', 'px-3', 'py-2', 'rounded-md',
+                  'text-white', 'block', 'px-3', 'py-2', 'rounded-md', 'text-base', 'font-medium'
                 ]"
               >Add Job</RouterLink>
               <RouterLink
                 to="/login"
-                v-if="!isAuthenticated"
+            v-if="!isAuthenticated"
                 :class="[
                   isActiveLink('/login')
                     ? 'bg-purple-900'
                     : 'hover:bg-gray-900 hover:text-white',
-                  'text-white', 'px-3', 'py-2', 'rounded-md',
+                  'text-white', 'block', 'px-3', 'py-2', 'rounded-md', 'text-base', 'font-medium'
                 ]"
               >Login</RouterLink>
-              <div v-if="isAuthenticated" class="relative flex items-center">
+              <!-- Profile dropdown for mobile -->
+              <div v-if="isAuthenticated" class="pt-4 pb-3 border-t border-purple-400 md:hidden">
+                <div class="flex items-center px-5">
+                  <div class="flex-shrink-0">
+                    <img :src="userProfile.profilePicture" alt="Profile" class="h-10 w-10 rounded-full" />
+                  </div>
+                  <div class="ml-3">
+                    <div class="text-base font-medium leading-none text-white">{{ userProfile.name }}</div>
+                  </div>
+                </div>
+                <div class="mt-3 space-y-1 px-2">
+                  <RouterLink to="/profile" class="block px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-700">Profile</RouterLink>
+                  <RouterLink to="/settings" class="block px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-700">Settings</RouterLink>
+                  <RouterLink to="/manage-account" class="block px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-700">Manage Account</RouterLink>
+                  <button @click="logout" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-purple-300 hover:text-white hover:bg-purple-700">Logout</button>
+                </div>
+              </div>
+              <!-- Original Profile dropdown for desktop -->
+              <div v-if="isAuthenticated" class="hidden md:relative md:flex md:items-center">
                 <img :src="userProfile.profilePicture" alt="Profile" class="h-8 w-8 rounded-full mr-2" />
                 <div class="relative">
                   <button @click="isDropdownOpen = !isDropdownOpen" class="text-white px-3 py-2 rounded-md focus:outline-none">
-                    <i class="pi pi-cog"></i>
+                    <i class="pi pi-cog"></i> <!-- Consider replacing pi-cog with an SVG or a more common icon if PrimeIcons isn't globally available -->
                   </button>
                   <!-- Dropdown -->
-                  <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2">
+                  <div v-if="isDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-10">
                     <RouterLink to="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Profile</RouterLink>
                     <RouterLink to="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Settings</RouterLink>
                     <RouterLink to="/manage-account" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Manage Account</RouterLink>
