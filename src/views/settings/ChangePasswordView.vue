@@ -90,11 +90,11 @@ const handleChangePassword = async () => {
             :type="showCurrentPassword ? 'text' : 'password'"
             id="currentPassword"
             v-model="currentPassword"
-            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             required
           />
           <i
-            :class="['pi', showCurrentPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            :class="['pi', showCurrentPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-[60%] transform -translate-y-1/2 cursor-pointer text-gray-500']"
             @click="toggleShowCurrentPassword"
             style="margin-top: 0.625rem;"
           ></i>
@@ -107,11 +107,11 @@ const handleChangePassword = async () => {
             :type="showNewPassword ? 'text' : 'password'"
             id="newPassword"
             v-model="newPassword"
-            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             required
           />
           <i
-            :class="['pi', showNewPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            :class="['pi', showNewPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-[60%] transform -translate-y-1/2 cursor-pointer text-gray-500']"
             @click="toggleShowNewPassword"
             style="margin-top: 0.625rem;"
           ></i>
@@ -124,11 +124,11 @@ const handleChangePassword = async () => {
             :type="showConfirmPassword ? 'text' : 'password'"
             id="confirmPassword"
             v-model="confirmPassword"
-            class="border rounded w-full py-3 px-4 pr-10 focus:outline-none focus:ring-2 focus:ring-purple-500"
+           class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
             required
           />
           <i
-            :class="['pi', showConfirmPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500']"
+            :class="['pi', showConfirmPassword ? 'pi-eye-slash' : 'pi-eye', 'absolute right-3 top-[60%] transform -translate-y-1/2 cursor-pointer text-gray-500']"
             @click="toggleShowConfirmPassword"
             style="margin-top: 0.625rem;"
           ></i>

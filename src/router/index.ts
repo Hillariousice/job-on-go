@@ -16,7 +16,6 @@ import ChangePasswordView from "@/views/settings/ChangePasswordView.vue";
 import HelpView from "@/views/settings/HelpView.vue";
 import ManageAccountView from "@/views/settings/ManageAccountView.vue"; // Added ManageAccountView import
 import { getAuth } from "firebase/auth";
-import ProfileView from "@/views/settings/ProfileView.vue";
 
 const  router = createRouter({
    history: createWebHistory(import.meta.env.BASE_URL),
@@ -59,17 +58,8 @@ const  router = createRouter({
     {
       path: '/dashboard',
       component: UserDashboard,
-<<<<<<< HEAD
        meta: { requiresAuth: true } },
 
-    { path: '/profile', 
-        name: 'profile',
-        component: ProfileView,
-         },
-=======
-      meta: { requiresAuth: true }
-    },
->>>>>>> a1db77320d8685f944bd2748f476587fc7593f36
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
