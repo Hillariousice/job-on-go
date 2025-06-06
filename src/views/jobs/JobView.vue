@@ -168,7 +168,7 @@ const handleApplyNow = async () => {
       jobId: jobId,
       applicantId: currentUserUID.value,
       applicationDate: new Date(),
-      status: 'pending',
+      status: 'applied', // <<< Changed to 'applied'
     };
 
     const docRef = await addDoc(collection(db, 'applications'), applicationData);

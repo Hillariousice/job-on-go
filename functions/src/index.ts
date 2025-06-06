@@ -44,25 +44,24 @@ export const dialogflowProxy = functions.https.onRequest(async (request, respons
     //    firebase functions:config:set dialogflow.client_email="YOUR_SERVICE_ACCOUNT_EMAIL"
     //    firebase functions:config:set dialogflow.private_key="YOUR_PRIVATE_KEY_CONTENT_AS_SINGLE_LINE"
     //    (For private_key, replace newlines with \n if pasting directly, or use a file path during config set if possible)
-    // Then, access them in your function like this:
-    // const dialogflowConfig = functions.config().dialogflow;
-    // const projectId = dialogflowConfig?.project_id;
-    // const credentials = {
-    //   client_email: dialogflowConfig?.client_email,
-    //   private_key: dialogflowConfig?.private_key?.replace(/\\n/g, '\n'), // Handle escaped newlines
-    // };
-    // If projectId or credentials are not found, handle the error appropriately.
-
-    const projectId = "job-on-go"; // <<<< REPLACE THIS
+    // Then, access them in your function 
+    
+    const dialogflowConfig = functions.config().dialogflow;
+    const projectId = dialogflowConfig?.project_id;
     const credentials = {
-      client_email: "dialogflow-agent-sa@job-on-go.iam.gserviceaccount.com", // <<<< REPLACE THIS
-      private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIpKSULdEdzydJ\niE7F9znlR6gYB0F/Y0M+/830YG8pCkULDf0iDfrwoyR9n/Mmm8LXMET9rEqME86O\ne6+skO+iwzhHd0yLOntReKVTI4d8W2Q1S66+0NhTCGGvR19ysyeseXBHHsC8ZeDA\nQcIbmJSZWOU2mDjYhrTJRTJgYHEK9snmBsShZrXU6bdrR+wb+6aqteP9rtlNqrHu\ndHSBixcIc+hVB0n6enNiXpSkl8gytDDqEbkzSbxiU0TQbdleBRF+gs0WIaXqF2Bd\n9j2402M95fa3qEfZK8kzAGgWilx4z7l+LhoFGAlvV7idj6+ylLL/+XvyV13jp6Ao\ndhS9IxUNAgMBAAECggEAH/hP+wZj5C6OUYKlHpkaggSNbaq2ToB4BhFHdVFqVO08\nfBryAxucKPytw1CZs0StYpFf5NWvmStMxdpCbyo27MXTcVu6eBLM9HnXSeyG2ZNM\nX8ub3+6yEWTr/7xNIp8WSr6c29A0ILDRA4FW1wPUZazK9QyDPkkUhF+Au+eSC49n\n6D4+kShN5LmisS9d4PEzUKF6Y9YuY6W3H2Fx07044fsSDkOHjVXbw7QOid+aTvgb\n7XQTfl4Yq5VD73r1e6jx6SZwL+8UVcXp6vugMxT+6mai9x3ZhjcyXoFD1CfsJ4ay\njfHENoQkLgyU7DFHhWuqftyloiMCwXYMRxemkMrPsQKBgQDssh7ZvTqfr/0q7uGP\nTblXvoJLPAhwaw2wCpbVKgIe0xeaFSSSzjrDTdONdM9hvGFNEnHTIGKTIVE02Kp0\nuEBO++r9bPylW/JwK5xRzLV9KfgcRxunSuK8yDBRBf3FpeVkk42YOX8787d2seAv\n6MrjlZ29Bdr769wI2BRys7VLFQKBgQDZAcsLFQi/IHYnlfScRJqt5hDI3BzJv7zl\nIaRyqJGe1VLK+YZfC0QJbKSRJc05q9FnOt/Sy0RwyO8mAD+Dt7cqFaOO1VnmPeZi\nD2EWecLGmlUaMo4Oz7Lg6PogH/zTC/dC8YIEvH/EkSTZQi63MAyEpLaci+eaQWtT\nhqjoM2PAGQKBgCFjuyBiJkvyipcs3ZrWjwfGsyCj1ljtcR/dTovBgk0Q4Cp3QxKG\njxmP+ADjcoHKDjvOF0p+LgmtUIRQ8DLI7yF1PiAD6Nv2zYtvS3zqkMuYSQzMJyWB\nVdzlrJMxciwYi/SVMAtCSSWO6tmOnB6GC2DxcTACDHMvQXnp6XCI01FFAoGASDvv\nkV3MDorIqb6hsM6pSk91sNaMAp//SaocKkpwRpWtvIC4uLRwTk7KrMIPgS3vQ1R2\nop0kyAIqkNSuT7L8llajnezowtpB8Mw7vhaDvkYrI9BGNynt2i3S7JSZPMsT4EWx\nyM/SG+VQhb0g/btRv2lwm8V6L3+tMR125ewNPSkCgYEApHiemVp6Y0CBwQ3tQLOz\nq71x3i+QRhG/mReGv8Q+53YjSbRjduKpSOX0yRKbSSMguX1l3c8mycS8rgxQKdvv\nAFMvaK0nAGyy4WRxD3aitqmkHp7brQpML1Gzi52Tb2Y5bDY2dQ5xZjv7WvXsllTg\nZknR6eLsnStzuaQqMFq440E=\n-----END PRIVATE KEY-----\n", // <<<< REPLACE THIS (ensure newlines are \n)
+      client_email: dialogflowConfig?.client_email,
+      private_key: dialogflowConfig?.private_key?.replace(/\\n/g, '\n'), // Handle escaped newlines
     };
 
-    if (projectId === "job-on-go" || credentials.private_key.includes("-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIpKSULdEdzydJ\niE7F9znlR6gYB0F/Y0M+/830YG8pCkULDf0iDfrwoyR9n/Mmm8LXMET9rEqME86O\ne6+skO+iwzhHd0yLOntReKVTI4d8W2Q1S66+0NhTCGGvR19ysyeseXBHHsC8ZeDA\nQcIbmJSZWOU2mDjYhrTJRTJgYHEK9snmBsShZrXU6bdrR+wb+6aqteP9rtlNqrHu\ndHSBixcIc+hVB0n6enNiXpSkl8gytDDqEbkzSbxiU0TQbdleBRF+gs0WIaXqF2Bd\n9j2402M95fa3qEfZK8kzAGgWilx4z7l+LhoFGAlvV7idj6+ylLL/+XvyV13jp6Ao\ndhS9IxUNAgMBAAECggEAH/hP+wZj5C6OUYKlHpkaggSNbaq2ToB4BhFHdVFqVO08\nfBryAxucKPytw1CZs0StYpFf5NWvmStMxdpCbyo27MXTcVu6eBLM9HnXSeyG2ZNM\nX8ub3+6yEWTr/7xNIp8WSr6c29A0ILDRA4FW1wPUZazK9QyDPkkUhF+Au+eSC49n\n6D4+kShN5LmisS9d4PEzUKF6Y9YuY6W3H2Fx07044fsSDkOHjVXbw7QOid+aTvgb\n7XQTfl4Yq5VD73r1e6jx6SZwL+8UVcXp6vugMxT+6mai9x3ZhjcyXoFD1CfsJ4ay\njfHENoQkLgyU7DFHhWuqftyloiMCwXYMRxemkMrPsQKBgQDssh7ZvTqfr/0q7uGP\nTblXvoJLPAhwaw2wCpbVKgIe0xeaFSSSzjrDTdONdM9hvGFNEnHTIGKTIVE02Kp0\nuEBO++r9bPylW/JwK5xRzLV9KfgcRxunSuK8yDBRBf3FpeVkk42YOX8787d2seAv\n6MrjlZ29Bdr769wI2BRys7VLFQKBgQDZAcsLFQi/IHYnlfScRJqt5hDI3BzJv7zl\nIaRyqJGe1VLK+YZfC0QJbKSRJc05q9FnOt/Sy0RwyO8mAD+Dt7cqFaOO1VnmPeZi\nD2EWecLGmlUaMo4Oz7Lg6PogH/zTC/dC8YIEvH/EkSTZQi63MAyEpLaci+eaQWtT\nhqjoM2PAGQKBgCFjuyBiJkvyipcs3ZrWjwfGsyCj1ljtcR/dTovBgk0Q4Cp3QxKG\njxmP+ADjcoHKDjvOF0p+LgmtUIRQ8DLI7yF1PiAD6Nv2zYtvS3zqkMuYSQzMJyWB\nVdzlrJMxciwYi/SVMAtCSSWO6tmOnB6GC2DxcTACDHMvQXnp6XCI01FFAoGASDvv\nkV3MDorIqb6hsM6pSk91sNaMAp//SaocKkpwRpWtvIC4uLRwTk7KrMIPgS3vQ1R2\nop0kyAIqkNSuT7L8llajnezowtpB8Mw7vhaDvkYrI9BGNynt2i3S7JSZPMsT4EWx\nyM/SG+VQhb0g/btRv2lwm8V6L3+tMR125ewNPSkCgYEApHiemVp6Y0CBwQ3tQLOz\nq71x3i+QRhG/mReGv8Q+53YjSbRjduKpSOX0yRKbSSMguX1l3c8mycS8rgxQKdvv\nAFMvaK0nAGyy4WRxD3aitqmkHp7brQpML1Gzi52Tb2Y5bDY2dQ5xZjv7WvXsllTg\nZknR6eLsnStzuaQqMFq440E=\n-----END PRIVATE KEY-----\n")) {
-        logger.error("dialogflowProxy: Dialogflow project ID or credentials are still placeholders. Please update them.");
-        response.status(500).send({ error: "Dialogflow service not configured by the administrator." });
-        return;
+    if (!dialogflowConfig || !projectId || !credentials.client_email || !credentials.private_key) {
+      logger.error(
+        "dialogflowProxy: Dialogflow configuration is missing. " +
+        "Please set dialogflow.project_id, dialogflow.client_email, and dialogflow.private_key in Firebase environment configuration. " +
+        "Refer to Firebase and Dialogflow documentation for setup instructions."
+      );
+      response.status(500).send({ error: "Dialogflow service not configured by the administrator. Missing critical configuration." });
+      return;
+
     }
     // --- END OF PLACEHOLDER SECTION ---
 
@@ -204,6 +203,153 @@ export const handleNewApplication = functions.firestore
       throw error;
     }
   });
+
+export const contactApplicantAndUpdateStatus = functions.https.onCall(async (data, context) => {
+  logger.info("contactApplicantAndUpdateStatus: Function called with data:", data);
+
+  // 1. Validate parameters
+  const { applicationId, newStatus, emailSubject, emailBody } = data;
+  if (!applicationId || !newStatus || !emailSubject || !emailBody) {
+    logger.error("contactApplicantAndUpdateStatus: Missing required parameters.", data);
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "Missing required parameters: applicationId, newStatus, emailSubject, and emailBody are required."
+    );
+  }
+
+  // 2. Check authentication
+  if (!context.auth) {
+    logger.error("contactApplicantAndUpdateStatus: User not authenticated.");
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  const companyRepUID = context.auth.uid;
+  logger.info(`contactApplicantAndUpdateStatus: Authenticated user UID: ${companyRepUID}`);
+
+  const applicationRef = db.collection("applications").doc(applicationId);
+  const mailCollectionRef = db.collection("mail");
+
+  try {
+    // 3. Fetch application and job details, then applicant email
+    const applicantEmail = await db.runTransaction(async (transaction) => {
+      // 4. Fetch application document
+      const appDoc = await transaction.get(applicationRef);
+      if (!appDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Application not found: ${applicationId}`);
+        throw new functions.https.HttpsError("not-found", `Application with ID ${applicationId} not found.`);
+      }
+      const appData = appDoc.data();
+      if (!appData) {
+        logger.error(`contactApplicantAndUpdateStatus: Application data undefined for ID: ${applicationId}`);
+        throw new functions.https.HttpsError("internal", "Application data is undefined.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched application: ${applicationId}`, appData);
+
+
+      // 5. Get jobId and applicantId from application
+      const jobId = appData.jobId;
+      const applicantId = appData.applicantId;
+      if (!jobId || !applicantId) {
+        logger.error(`contactApplicantAndUpdateStatus: Application ${applicationId} is missing jobId or applicantId.`);
+        throw new functions.https.HttpsError("internal", "Application data is incomplete (missing jobId or applicantId).");
+      }
+
+      // 6. Fetch job document
+      const jobRef = db.collection("jobs").doc(jobId);
+      const jobDoc = await transaction.get(jobRef);
+      if (!jobDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Job not found: ${jobId} for application ${applicationId}`);
+        throw new functions.https.HttpsError("not-found", `Job with ID ${jobId} not found.`);
+      }
+      const jobData = jobDoc.data();
+      if (!jobData) {
+        logger.error(`contactApplicantAndUpdateStatus: Job data undefined for ID: ${jobId}`);
+        throw new functions.https.HttpsError("internal", "Job data is undefined.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched job: ${jobId}`, jobData);
+
+      // 7. Authorization Check: Verify job ownership
+      // Assuming jobData.userId stores the UID of the company representative who posted the job
+      if (jobData.userId !== companyRepUID) {
+        logger.error(
+          `contactApplicantAndUpdateStatus: Permission denied. User ${companyRepUID} is not the owner of job ${jobId}. Expected owner: ${jobData.userId}`
+        );
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have permission to modify this application."
+        );
+      }
+      logger.info(`contactApplicantAndUpdateStatus: User ${companyRepUID} authorized for job ${jobId}.`);
+
+      // 8. Fetch applicant's user document (assuming 'users' collection)
+      const userRef = db.collection("users").doc(applicantId);
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Applicant user document not found: ${applicantId}`);
+        throw new functions.https.HttpsError("not-found", `Applicant user with ID ${applicantId} not found.`);
+      }
+      const userData = userDoc.data();
+      if (!userData || !userData.email) {
+        logger.error(`contactApplicantAndUpdateStatus: Applicant user data for ${applicantId} is missing email.`);
+        throw new functions.https.HttpsError("internal", "Applicant user data does not contain an email address.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched applicant user: ${applicantId}`, { email: userData.email });
+
+      // 9. Update application status (INSIDE the transaction)
+      const currentStatusHistory = appData.statusHistory || [];
+      const newStatusEntry = {
+        status: newStatus,
+        date: admin.firestore.Timestamp.now(), // Use server timestamp for consistency
+        updatedBy: companyRepUID,
+      };
+      transaction.update(applicationRef, {
+        status: newStatus,
+        statusUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        statusHistory: [...currentStatusHistory, newStatusEntry],
+      });
+      logger.info(`contactApplicantAndUpdateStatus: Application update for ${applicationId} added to transaction.`);
+
+      return userData.email; // Return applicant's email for use after transaction
+    });
+
+    // If the transaction completed successfully, appData is updated and applicantEmail is available.
+    logger.info(`contactApplicantAndUpdateStatus: Transaction successful. Application ${applicationId} status updated to ${newStatus}.`);
+
+    // 10. Create email document in 'mail' collection
+    const mailDoc = {
+      to: [applicantEmail],
+      message: {
+        subject: emailSubject,
+        html: emailBody,
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      applicationId: applicationId, // For tracking
+      statusUpdatedTo: newStatus,   // For tracking
+    };
+    await mailCollectionRef.add(mailDoc);
+    logger.info(`contactApplicantAndUpdateStatus: Email queued for applicant ${applicantEmail} regarding application ${applicationId}.`, mailDoc);
+
+    // 11. Return success
+    return {
+      success: true,
+      message: "Application status updated and email queued successfully.",
+    };
+  } catch (error) {
+    logger.error("contactApplicantAndUpdateStatus: Error processing request:", error);
+    if (error instanceof functions.https.HttpsError) {
+      throw error; // Re-throw HttpsError directly
+    }
+    // For other errors, wrap them in a generic internal error
+    throw new functions.https.HttpsError(
+      "internal",
+      "An unexpected error occurred while processing your request.",
+      (error as Error).message // Optionally include original error message for debugging in logs
+    );
+  }
+});
+
 
 // Note: If there were other functions in the original index.ts, they should be preserved.
 // This overwrite includes the previous handleNewApplication function as an example.
