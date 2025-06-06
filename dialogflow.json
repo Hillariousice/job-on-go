@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "job-on-go",
+  "private_key_id": "6fc8bceea4770438625543336f42aadb9eb36623",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIpKSULdEdzydJ\niE7F9znlR6gYB0F/Y0M+/830YG8pCkULDf0iDfrwoyR9n/Mmm8LXMET9rEqME86O\ne6+skO+iwzhHd0yLOntReKVTI4d8W2Q1S66+0NhTCGGvR19ysyeseXBHHsC8ZeDA\nQcIbmJSZWOU2mDjYhrTJRTJgYHEK9snmBsShZrXU6bdrR+wb+6aqteP9rtlNqrHu\ndHSBixcIc+hVB0n6enNiXpSkl8gytDDqEbkzSbxiU0TQbdleBRF+gs0WIaXqF2Bd\n9j2402M95fa3qEfZK8kzAGgWilx4z7l+LhoFGAlvV7idj6+ylLL/+XvyV13jp6Ao\ndhS9IxUNAgMBAAECggEAH/hP+wZj5C6OUYKlHpkaggSNbaq2ToB4BhFHdVFqVO08\nfBryAxucKPytw1CZs0StYpFf5NWvmStMxdpCbyo27MXTcVu6eBLM9HnXSeyG2ZNM\nX8ub3+6yEWTr/7xNIp8WSr6c29A0ILDRA4FW1wPUZazK9QyDPkkUhF+Au+eSC49n\n6D4+kShN5LmisS9d4PEzUKF6Y9YuY6W3H2Fx07044fsSDkOHjVXbw7QOid+aTvgb\n7XQTfl4Yq5VD73r1e6jx6SZwL+8UVcXp6vugMxT+6mai9x3ZhjcyXoFD1CfsJ4ay\njfHENoQkLgyU7DFHhWuqftyloiMCwXYMRxemkMrPsQKBgQDssh7ZvTqfr/0q7uGP\nTblXvoJLPAhwaw2wCpbVKgIe0xeaFSSSzjrDTdONdM9hvGFNEnHTIGKTIVE02Kp0\nuEBO++r9bPylW/JwK5xRzLV9KfgcRxunSuK8yDBRBf3FpeVkk42YOX8787d2seAv\n6MrjlZ29Bdr769wI2BRys7VLFQKBgQDZAcsLFQi/IHYnlfScRJqt5hDI3BzJv7zl\nIaRyqJGe1VLK+YZfC0QJbKSRJc05q9FnOt/Sy0RwyO8mAD+Dt7cqFaOO1VnmPeZi\nD2EWecLGmlUaMo4Oz7Lg6PogH/zTC/dC8YIEvH/EkSTZQi63MAyEpLaci+eaQWtT\nhqjoM2PAGQKBgCFjuyBiJkvyipcs3ZrWjwfGsyCj1ljtcR/dTovBgk0Q4Cp3QxKG\njxmP+ADjcoHKDjvOF0p+LgmtUIRQ8DLI7yF1PiAD6Nv2zYtvS3zqkMuYSQzMJyWB\nVdzlrJMxciwYi/SVMAtCSSWO6tmOnB6GC2DxcTACDHMvQXnp6XCI01FFAoGASDvv\nkV3MDorIqb6hsM6pSk91sNaMAp//SaocKkpwRpWtvIC4uLRwTk7KrMIPgS3vQ1R2\nop0kyAIqkNSuT7L8llajnezowtpB8Mw7vhaDvkYrI9BGNynt2i3S7JSZPMsT4EWx\nyM/SG+VQhb0g/btRv2lwm8V6L3+tMR125ewNPSkCgYEApHiemVp6Y0CBwQ3tQLOz\nq71x3i+QRhG/mReGv8Q+53YjSbRjduKpSOX0yRKbSSMguX1l3c8mycS8rgxQKdvv\nAFMvaK0nAGyy4WRxD3aitqmkHp7brQpML1Gzi52Tb2Y5bDY2dQ5xZjv7WvXsllTg\nZknR6eLsnStzuaQqMFq440E=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-agent-sa@job-on-go.iam.gserviceaccount.com",
+  "client_id": "101334864904376266989",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-agent-sa%40job-on-go.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
