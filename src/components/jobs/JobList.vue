@@ -41,7 +41,7 @@ const state = reactive<{
   isLoading: true,
 });
 
-const isLoading = ref(false);
+// const isLoading = ref(false); // This ref is not used, state.isLoading is used.
 onMounted(async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'jobs'));
@@ -64,12 +64,12 @@ onMounted(async () => {
         Browse Jobs
       </h2>
       <!-- Show loading spinner while loading is true -->
-      <div v-if="state.isLoading" class="text-center text-gray-500 py-6">
-        <Loading v-model:active="isLoading" :is-full-page="true"/>
+      <div v-if="state.isLoading" class="flex item-center justify-center text-center text-gray-500 py-6">
+        <Loading v-model:active="state.isLoading" :is-full-page="true"/>
       </div>
 
       <!-- Show job listing when done loading -->
-      <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         <JobListing
           v-for="job in state.jobs.slice(0, limit || state.jobs.length)"
           :key="job.id"

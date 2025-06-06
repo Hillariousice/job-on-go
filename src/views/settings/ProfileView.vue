@@ -104,6 +104,7 @@ const handleUpdate = async () => {
 </script>
 
 <template>
+    
   <section class="max-w-4xl mx-auto p-6">
     <form class="mb-8">
       <label class="block mb-4">

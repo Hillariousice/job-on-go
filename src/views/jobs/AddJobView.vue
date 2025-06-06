@@ -12,6 +12,7 @@ const form = reactive({
   description: '',
   salary: '',
   location: '',
+  applicantLimit: '',
   company: {
     name: '',
     description: '',
@@ -53,6 +54,7 @@ const handleSubmit = async () => {
       location: form.location,
       description: form.description,
       salary: form.salary,
+      applicantLimit: parseInt(form.applicantLimit) || 0,
       company: {
         name: form.company.name,
         description: form.company.description,
@@ -82,7 +84,7 @@ onMounted(() => {
 <template>
   <section class="bg-green-50">
     <div class="container m-auto max-w-2xl py-24">
-      <div class="bg-white px-6 py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
+      <div class="bg-white px-4 sm:px-6 py-6 sm:py-8 mb-4 shadow-md rounded-md border m-4 md:m-0">
         <form v-if="isAuthenticated" @submit.prevent="handleSubmit">
           <h2 class="text-3xl text-center font-semibold mb-6">Add Job</h2>
 
@@ -120,6 +122,12 @@ onMounted(() => {
               <option value="$70K - $80K">$70 - $80K</option>
               <option value="Over $200K">Over $200K</option>
             </select>
+          </div>
+
+          <!-- Applicant Limit -->
+          <div class="mb-4">
+            <label for="applicantLimit" class="block text-gray-700 font-bold mb-2">Applicant Limit</label>
+            <input type="number" v-model="form.applicantLimit" id="applicantLimit" name="applicantLimit" class="border rounded w-full py-2 px-3 mb-2" placeholder="Enter maximum number of applicants (optional)" min="0" />
           </div>
 
           <!-- Location -->

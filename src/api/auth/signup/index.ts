@@ -17,6 +17,7 @@ export async function signup(userInfo: Omit<UserSignup, 'id' | 'created_at' | 'u
       email: userInfo.email,
       password: userInfo.password,
       phone: userInfo.phone,
+      accountType: 'developer', // Added account type
       email_verified: user.emailVerified,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),

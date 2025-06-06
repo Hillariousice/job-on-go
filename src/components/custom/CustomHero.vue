@@ -28,7 +28,7 @@ defineProps({
 </script>
 
 <template>
-  <section class="bg-purple-700 py-20 mb-4">
+  <section class="bg-purple-700 py-12 sm:py-16 md:py-20 lg:py-24 mb-4">
     <div
       class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col items-center"
     >
@@ -42,13 +42,13 @@ defineProps({
         <div class="flex flex-col sm:flex-row sm:justify-center w-full items-center">
           <router-link
             :to="button.route"
-            class="bg-white text-purple-700 font-bold p-2 rounded-full hover:bg-purple-100 transition duration-200 w-full sm:w-auto text-center mb-4 sm:mb-0"
+            class="bg-white text-purple-700 font-bold px-4 py-3 rounded-full hover:bg-purple-100 transition duration-200 w-full sm:w-auto text-center mb-4 sm:mb-0"
           >
             {{ button.text }}
           </router-link>
           <router-link
             :to="buttonCom.route"
-            class="bg-white text-purple-700 font-bold p-2 rounded-full hover:bg-purple-100 transition duration-200 w-full sm:w-auto text-center sm:ml-4"
+            class="bg-white text-purple-700 font-bold px-4 py-3 rounded-full hover:bg-purple-100 transition duration-200 w-full sm:w-auto text-center sm:ml-4"
           >
             {{ buttonCom.text }}
           </router-link>
