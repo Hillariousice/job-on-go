@@ -17,7 +17,7 @@ import ChatbotInterface from '@/components/chatbot/ChatbotInterface.vue'; // Imp
       </div>
 
       <!-- ChatbotInterface Integration -->
-      <div class="my-6"> {/* Added my-6 for spacing around the chatbot */}
+      <div class="my-6">
         <ChatbotInterface />
       </div>
 
