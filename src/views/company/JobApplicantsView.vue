@@ -287,7 +287,7 @@ const formatDate = (date: Date | undefined) => {
               <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                 <button
                   @click="openContactModal(applicant)"
-                  class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded hover:bg-blue-100 transition-colors"
+                  class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded-lg hover:bg-blue-100 transition-colors"
                   title="Contact & Update Status"
                 >
                   Contact/Update
@@ -371,14 +371,14 @@ const formatDate = (date: Date | undefined) => {
             <button
               type="button"
               @click="closeContactModal"
-              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
               :disabled="isSubmitting"
             >
               Cancel
             </button>
             <button
               type="submit"
-              class="px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50"
+              class="px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50"
               :disabled="isSubmitting"
             >
               <span v-if="isSubmitting">Sending...</span>
