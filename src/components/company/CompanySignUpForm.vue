@@ -53,7 +53,7 @@ const handleSignup = async () => {
           v-model="name"
           type="text" 
           id="name" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required
         />
       </div>
@@ -64,7 +64,7 @@ const handleSignup = async () => {
           v-model="description"
           type="text" 
           id="description" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />  
       </div>
@@ -75,7 +75,7 @@ const handleSignup = async () => {
           v-model="phone"
           type="text" 
           id="phone" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
@@ -86,7 +86,7 @@ const handleSignup = async () => {
           v-model="email"
           type="email" 
           id="email"
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
@@ -98,7 +98,7 @@ const handleSignup = async () => {
           v-model="password"
           type="password" 
           id="password" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
