@@ -111,18 +111,26 @@ const formatDate = (date: Date | undefined) => {
 };
 
 const getStatusClass = (status: string) => {
-  status = status.toLowerCase();
+  status = status.toLowerCase(); // Ensure case-insensitivity
   switch (status) {
-    case 'pending':
+    case 'applied': // Was 'pending'
       return 'bg-yellow-100 text-yellow-800';
-    case 'shortlisted':
-      return 'bg-blue-100 text-blue-800'; // Changed from green to blue for differentiation from 'hired' potentially
+    case 'under-review':
+      return 'bg-teal-100 text-teal-800';
+    case 'interviewing': // Was 'shortlisted' - or similar
+      return 'bg-blue-100 text-blue-800';
+    case 'offer-extended':
+      return 'bg-purple-100 text-purple-800';
+    case 'offer-accepted': // Was 'hired'
+      return 'bg-green-100 text-green-800';
+    case 'offer-declined':
+      return 'bg-orange-100 text-orange-800';
     case 'rejected':
       return 'bg-red-100 text-red-800';
-    case 'hired':
-      return 'bg-green-100 text-green-800';
+    case 'withdrawn':
+      return 'bg-gray-200 text-gray-700'; // Slightly different gray for distinction
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800'; // Default for any unknown status
   }
 };
 </script>

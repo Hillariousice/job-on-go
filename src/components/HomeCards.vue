@@ -25,7 +25,7 @@ import CustomCard from '@/components/custom/CustomCard.vue'
             List your job to find the perfect developer for the role
           </p>
           <RouterLink
-            to="/jobs/add"
+            to="/login"
             class="inline-block bg-purple-500 text-white rounded-lg px-4 py-2 hover:bg-purple-600"
           >
             Add Job

@@ -13,6 +13,7 @@ import {
   // DocumentData will be imported as type-only
 } from 'firebase/firestore';
 import type { DocumentData } from 'firebase/firestore';
+import { getFunctions, httpsCallable } from 'firebase/functions';
 import { useToast } from 'vue-toast-notification';
 import BackButton from '@/components/custom/CustomBackButton.vue';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -42,6 +43,20 @@ const jobDetails = ref<JobDetails | null>(null);
 const applicants = ref<Applicant[]>([]);
 const isLoading = ref(true);
 const currentUser = ref<User | null>(null);
+const functions = getFunctions(); // Firebase Functions instance
+
+// Modal and form state
+const isModalOpen = ref(false);
+const selectedApplicant = ref<Applicant | null>(null);
+const newStatus = ref('');
+const emailSubject = ref('');
+const emailBody = ref('');
+const availableStatuses = ref([
+  'applied', 'under-review', 'interviewing',
+  'offer-extended', 'offer-accepted', 'offer-declined',
+  'rejected', 'withdrawn'
+]);
+const isSubmitting = ref(false); // For loading state on modal button
 
 onAuthStateChanged(auth, (user) => {
   currentUser.value = user;
@@ -129,20 +144,77 @@ const fetchApplicants = async () => {
   }
 };
 
-const updateApplicationStatus = async (applicationId: string, newStatus: string) => {
-  try {
-    const applicationDocRef = doc(db, 'applications', applicationId);
-    await updateDoc(applicationDocRef, { status: newStatus });
+// const updateApplicationStatus = async (applicationId: string, newStatus: string) => {
+//   try {
+//     const applicationDocRef = doc(db, 'applications', applicationId);
+//     await updateDoc(applicationDocRef, { status: newStatus });
 
-    // Update local data
-    const index = applicants.value.findIndex(app => app.id === applicationId);
-    if (index !== -1) {
-      applicants.value[index].status = newStatus;
+//     // Update local data
+//     const index = applicants.value.findIndex(app => app.id === applicationId);
+//     if (index !== -1) {
+//       applicants.value[index].status = newStatus;
+//     }
+//     toast.success(`Application status updated to ${newStatus}.`);
+//   } catch (error) {
+//     console.error('Error updating application status:', error);
+//     toast.error('Failed to update status.');
+//   }
+// };
+
+const openContactModal = (applicant: Applicant) => {
+  selectedApplicant.value = applicant;
+  newStatus.value = applicant.status; // Pre-fill with current status
+  emailSubject.value = `Update regarding your application for ${jobDetails.value?.title || 'the position'}`; // Pre-fill subject
+  emailBody.value = `Dear ${applicant.applicantName || 'Applicant'},\n\nRegarding your application for the role of ${jobDetails.value?.title || 'our recent opening'}:\n\n[Your message here]\n\nSincerely,\nThe Hiring Team`; // Basic template
+  isModalOpen.value = true;
+};
+
+const closeContactModal = () => {
+  isModalOpen.value = false;
+  selectedApplicant.value = null;
+  newStatus.value = '';
+  emailSubject.value = '';
+  emailBody.value = '';
+  isSubmitting.value = false;
+};
+
+const handleSendEmailAndUpdateStatus = async () => {
+  if (!selectedApplicant.value || !newStatus.value || !emailSubject.value || !emailBody.value) {
+    toast.error('Please fill in all fields: new status, subject, and email body.');
+    return;
+  }
+  if (!selectedApplicant.value.id) {
+    toast.error('Selected applicant ID is missing.');
+    return;
+  }
+
+  isSubmitting.value = true;
+  try {
+    const contactAndUpdate = httpsCallable(functions, 'contactApplicantAndUpdateStatus');
+    const result = await contactAndUpdate({
+      applicationId: selectedApplicant.value.id,
+      newStatus: newStatus.value,
+      emailSubject: emailSubject.value,
+      emailBody: emailBody.value,
+    });
+
+    if (result.data && (result.data as any).success) {
+      // Update local data
+      const index = applicants.value.findIndex(app => app.id === selectedApplicant.value!.id);
+      if (index !== -1) {
+        applicants.value[index].status = newStatus.value;
+      }
+      toast.success((result.data as any).message || 'Status updated and email queued.');
+      closeContactModal();
+    } else {
+      // This case might not be hit if cloud function throws an error, which is caught by catch block
+      toast.error((result.data as any).message || 'Failed to update status or send email.');
     }
-    toast.success(`Application status updated to ${newStatus}.`);
-  } catch (error) {
-    console.error('Error updating application status:', error);
-    toast.error('Failed to update status.');
+  } catch (error: any) {
+    console.error('Error calling contactApplicantAndUpdateStatus:', error);
+    toast.error(error.message || 'An unexpected error occurred.');
+  } finally {
+    isSubmitting.value = false;
   }
 };
 
@@ -214,6 +286,14 @@ const formatDate = (date: Date | undefined) => {
               </td>
               <td class="px-4 py-3 whitespace-nowrap text-sm font-medium">
                 <button
+                  @click="openContactModal(applicant)"
+                  class="text-blue-600 hover:text-blue-900 px-2 py-1 rounded hover:bg-blue-100 transition-colors"
+                  title="Contact & Update Status"
+                >
+                  Contact/Update
+                </button>
+                <!--
+                <button
                   @click="updateApplicationStatus(applicant.id, 'shortlisted')"
                   :disabled="applicant.status === 'shortlisted'"
                   class="text-purple-600 hover:text-purple-900 disabled:opacity-50 disabled:cursor-not-allowed mr-2 sm:mr-3 px-2 py-1 rounded hover:bg-purple-100 transition-colors"
@@ -229,11 +309,83 @@ const formatDate = (date: Date | undefined) => {
                 >
                   Reject
                 </button>
-                <!-- Add more actions like "Mark as Hired" if needed -->
+                -->
               </td>
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- Contact Applicant Modal -->
+    <div v-if="isModalOpen" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center p-4">
+      <div class="bg-white p-6 sm:p-8 rounded-lg shadow-xl w-full max-w-lg">
+        <h3 class="text-xl sm:text-2xl font-bold mb-6 text-purple-700">Contact Applicant & Update Status</h3>
+
+        <div v-if="selectedApplicant" class="mb-4">
+          <p class="text-sm text-gray-600">Applicant: <span class="font-semibold">{{ selectedApplicant.applicantName }}</span></p>
+          <p class="text-sm text-gray-600">Current Status: <span class="font-semibold">{{ selectedApplicant.status }}</span></p>
+        </div>
+
+        <form @submit.prevent="handleSendEmailAndUpdateStatus">
+          <div class="mb-4">
+            <label for="newStatus" class="block text-sm font-medium text-gray-700 mb-1">New Status <span class="text-red-500">*</span></label>
+            <select
+              id="newStatus"
+              v-model="newStatus"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+            >
+              <option value="" disabled>Select a status</option>
+              <option v-for="status in availableStatuses" :key="status" :value="status">
+                {{ status.charAt(0).toUpperCase() + status.slice(1).replace(/-/g, ' ') }}
+              </option>
+            </select>
+          </div>
+
+          <div class="mb-4">
+            <label for="emailSubject" class="block text-sm font-medium text-gray-700 mb-1">Email Subject <span class="text-red-500">*</span></label>
+            <input
+              type="text"
+              id="emailSubject"
+              v-model="emailSubject"
+              required
+              class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+              placeholder="e.g., Update on your application"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label for="emailBody" class="block text-sm font-medium text-gray-700 mb-1">Email Body <span class="text-red-500">*</span></label>
+            <textarea
+              id="emailBody"
+              v-model="emailBody"
+              required
+              rows="6"
+              class="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
+              placeholder="Dear Applicant..."
+            ></textarea>
+          </div>
+
+          <div class="flex items-center justify-end space-x-3 sm:space-x-4">
+            <button
+              type="button"
+              @click="closeContactModal"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors"
+              :disabled="isSubmitting"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="px-4 py-2 text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-colors disabled:opacity-50"
+              :disabled="isSubmitting"
+            >
+              <span v-if="isSubmitting">Sending...</span>
+              <span v-else>Send & Update Status</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

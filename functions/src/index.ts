@@ -45,24 +45,21 @@ export const dialogflowProxy = functions.https.onRequest(async (request, respons
     //    firebase functions:config:set dialogflow.private_key="YOUR_PRIVATE_KEY_CONTENT_AS_SINGLE_LINE"
     //    (For private_key, replace newlines with \n if pasting directly, or use a file path during config set if possible)
     // Then, access them in your function like this:
-    // const dialogflowConfig = functions.config().dialogflow;
-    // const projectId = dialogflowConfig?.project_id;
-    // const credentials = {
-    //   client_email: dialogflowConfig?.client_email,
-    //   private_key: dialogflowConfig?.private_key?.replace(/\\n/g, '\n'), // Handle escaped newlines
-    // };
-    // If projectId or credentials are not found, handle the error appropriately.
-
-    const projectId = "YOUR_DIALOGFLOW_PROJECT_ID"; // <<<< REPLACE THIS
+    const dialogflowConfig = functions.config().dialogflow;
+    const projectId = dialogflowConfig?.project_id;
     const credentials = {
-      client_email: "your-service-account-email@your-project-id.iam.gserviceaccount.com", // <<<< REPLACE THIS
-      private_key: "-----BEGIN PRIVATE KEY-----\\nYOUR_PRIVATE_KEY_HERE\\nYOUR_PRIVATE_KEY_CONTINUED\\n-----END PRIVATE KEY-----\\n", // <<<< REPLACE THIS (ensure newlines are \n)
+      client_email: dialogflowConfig?.client_email,
+      private_key: dialogflowConfig?.private_key?.replace(/\\n/g, '\n'), // Handle escaped newlines
     };
 
-    if (projectId === "YOUR_DIALOGFLOW_PROJECT_ID" || credentials.private_key.includes("YOUR_PRIVATE_KEY_HERE")) {
-        logger.error("dialogflowProxy: Dialogflow project ID or credentials are still placeholders. Please update them.");
-        response.status(500).send({ error: "Dialogflow service not configured by the administrator." });
-        return;
+    if (!dialogflowConfig || !projectId || !credentials.client_email || !credentials.private_key) {
+      logger.error(
+        "dialogflowProxy: Dialogflow configuration is missing. " +
+        "Please set dialogflow.project_id, dialogflow.client_email, and dialogflow.private_key in Firebase environment configuration. " +
+        "Refer to Firebase and Dialogflow documentation for setup instructions."
+      );
+      response.status(500).send({ error: "Dialogflow service not configured by the administrator. Missing critical configuration." });
+      return;
     }
     // --- END OF PLACEHOLDER SECTION ---
 
@@ -204,6 +201,153 @@ export const handleNewApplication = functions.firestore
       throw error;
     }
   });
+
+export const contactApplicantAndUpdateStatus = functions.https.onCall(async (data, context) => {
+  logger.info("contactApplicantAndUpdateStatus: Function called with data:", data);
+
+  // 1. Validate parameters
+  const { applicationId, newStatus, emailSubject, emailBody } = data;
+  if (!applicationId || !newStatus || !emailSubject || !emailBody) {
+    logger.error("contactApplicantAndUpdateStatus: Missing required parameters.", data);
+    throw new functions.https.HttpsError(
+      "invalid-argument",
+      "Missing required parameters: applicationId, newStatus, emailSubject, and emailBody are required."
+    );
+  }
+
+  // 2. Check authentication
+  if (!context.auth) {
+    logger.error("contactApplicantAndUpdateStatus: User not authenticated.");
+    throw new functions.https.HttpsError(
+      "unauthenticated",
+      "The function must be called while authenticated."
+    );
+  }
+  const companyRepUID = context.auth.uid;
+  logger.info(`contactApplicantAndUpdateStatus: Authenticated user UID: ${companyRepUID}`);
+
+  const applicationRef = db.collection("applications").doc(applicationId);
+  const mailCollectionRef = db.collection("mail");
+
+  try {
+    // 3. Fetch application and job details, then applicant email
+    const applicantEmail = await db.runTransaction(async (transaction) => {
+      // 4. Fetch application document
+      const appDoc = await transaction.get(applicationRef);
+      if (!appDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Application not found: ${applicationId}`);
+        throw new functions.https.HttpsError("not-found", `Application with ID ${applicationId} not found.`);
+      }
+      const appData = appDoc.data();
+      if (!appData) {
+        logger.error(`contactApplicantAndUpdateStatus: Application data undefined for ID: ${applicationId}`);
+        throw new functions.https.HttpsError("internal", "Application data is undefined.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched application: ${applicationId}`, appData);
+
+
+      // 5. Get jobId and applicantId from application
+      const jobId = appData.jobId;
+      const applicantId = appData.applicantId;
+      if (!jobId || !applicantId) {
+        logger.error(`contactApplicantAndUpdateStatus: Application ${applicationId} is missing jobId or applicantId.`);
+        throw new functions.https.HttpsError("internal", "Application data is incomplete (missing jobId or applicantId).");
+      }
+
+      // 6. Fetch job document
+      const jobRef = db.collection("jobs").doc(jobId);
+      const jobDoc = await transaction.get(jobRef);
+      if (!jobDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Job not found: ${jobId} for application ${applicationId}`);
+        throw new functions.https.HttpsError("not-found", `Job with ID ${jobId} not found.`);
+      }
+      const jobData = jobDoc.data();
+      if (!jobData) {
+        logger.error(`contactApplicantAndUpdateStatus: Job data undefined for ID: ${jobId}`);
+        throw new functions.https.HttpsError("internal", "Job data is undefined.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched job: ${jobId}`, jobData);
+
+      // 7. Authorization Check: Verify job ownership
+      // Assuming jobData.userId stores the UID of the company representative who posted the job
+      if (jobData.userId !== companyRepUID) {
+        logger.error(
+          `contactApplicantAndUpdateStatus: Permission denied. User ${companyRepUID} is not the owner of job ${jobId}. Expected owner: ${jobData.userId}`
+        );
+        throw new functions.https.HttpsError(
+          "permission-denied",
+          "You do not have permission to modify this application."
+        );
+      }
+      logger.info(`contactApplicantAndUpdateStatus: User ${companyRepUID} authorized for job ${jobId}.`);
+
+      // 8. Fetch applicant's user document (assuming 'users' collection)
+      const userRef = db.collection("users").doc(applicantId);
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists) {
+        logger.error(`contactApplicantAndUpdateStatus: Applicant user document not found: ${applicantId}`);
+        throw new functions.https.HttpsError("not-found", `Applicant user with ID ${applicantId} not found.`);
+      }
+      const userData = userDoc.data();
+      if (!userData || !userData.email) {
+        logger.error(`contactApplicantAndUpdateStatus: Applicant user data for ${applicantId} is missing email.`);
+        throw new functions.https.HttpsError("internal", "Applicant user data does not contain an email address.");
+      }
+      logger.info(`contactApplicantAndUpdateStatus: Fetched applicant user: ${applicantId}`, { email: userData.email });
+
+      // 9. Update application status (INSIDE the transaction)
+      const currentStatusHistory = appData.statusHistory || [];
+      const newStatusEntry = {
+        status: newStatus,
+        date: admin.firestore.Timestamp.now(), // Use server timestamp for consistency
+        updatedBy: companyRepUID,
+      };
+      transaction.update(applicationRef, {
+        status: newStatus,
+        statusUpdatedAt: admin.firestore.FieldValue.serverTimestamp(),
+        statusHistory: [...currentStatusHistory, newStatusEntry],
+      });
+      logger.info(`contactApplicantAndUpdateStatus: Application update for ${applicationId} added to transaction.`);
+
+      return userData.email; // Return applicant's email for use after transaction
+    });
+
+    // If the transaction completed successfully, appData is updated and applicantEmail is available.
+    logger.info(`contactApplicantAndUpdateStatus: Transaction successful. Application ${applicationId} status updated to ${newStatus}.`);
+
+    // 10. Create email document in 'mail' collection
+    const mailDoc = {
+      to: [applicantEmail],
+      message: {
+        subject: emailSubject,
+        html: emailBody,
+      },
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      applicationId: applicationId, // For tracking
+      statusUpdatedTo: newStatus,   // For tracking
+    };
+    await mailCollectionRef.add(mailDoc);
+    logger.info(`contactApplicantAndUpdateStatus: Email queued for applicant ${applicantEmail} regarding application ${applicationId}.`, mailDoc);
+
+    // 11. Return success
+    return {
+      success: true,
+      message: "Application status updated and email queued successfully.",
+    };
+  } catch (error) {
+    logger.error("contactApplicantAndUpdateStatus: Error processing request:", error);
+    if (error instanceof functions.https.HttpsError) {
+      throw error; // Re-throw HttpsError directly
+    }
+    // For other errors, wrap them in a generic internal error
+    throw new functions.https.HttpsError(
+      "internal",
+      "An unexpected error occurred while processing your request.",
+      (error as Error).message // Optionally include original error message for debugging in logs
+    );
+  }
+});
+
 
 // Note: If there were other functions in the original index.ts, they should be preserved.
 // This overwrite includes the previous handleNewApplication function as an example.
