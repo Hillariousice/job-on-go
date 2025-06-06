@@ -48,57 +48,57 @@ const handleSignup = async () => {
       
       <div class="mb-4 relative">
         <label for="name" class="block text-gray-700">Name</label>
-        <i class="pi pi-user absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-user absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="name"
           type="text" 
           id="name" 
-          class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-purple-600 active:border-purple-600 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-purple-600" 
-          required 
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+            required 
         />
       </div>
       <div class="mb-4 relative">
         <label for="description" class="block text-gray-700">Description</label>
-        <i class="pi pi-user absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-user absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="description"
           type="text" 
           id="description" 
-          class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-purple-600 active:border-purple-600 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-purple-600" 
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />  
       </div>
       <div class="mb-4 relative">
         <label for="phone" class="block text-gray-700">Phone</label>
-        <i class="pi pi-phone absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-phone absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="phone"
           type="text" 
           id="phone" 
-          class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-purple-600 active:border-purple-600 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-purple-600" 
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
       <div class="mb-4 relative">
         <label for="email" class="block text-gray-700">Email</label>
-        <i class="pi pi-envelope absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-envelope absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="email"
           type="email" 
           id="email" 
-          class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-purple-600 active:border-purple-600 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-purple-600" 
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
       
       <div class="mb-6 relative">
         <label for="password" class="block text-gray-700">Password</label>
-        <i class="pi pi-lock absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-lock absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="password"
           type="password" 
           id="password" 
-          class="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-3 text-black outline-none transition focus:border-purple-600 active:border-purple-600 disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-purple-600" 
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
