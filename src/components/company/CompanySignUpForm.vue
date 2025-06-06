@@ -48,7 +48,7 @@ const handleSignup = async () => {
       
       <div class="mb-4 relative">
         <label for="name" class="block text-gray-700">Name</label>
-        <i class="pi pi-user absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-user absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="name"
           type="text" 
@@ -59,7 +59,7 @@ const handleSignup = async () => {
       </div>
       <div class="mb-4 relative">
         <label for="description" class="block text-gray-700">Description</label>
-        <i class="pi pi-user absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-user absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="description"
           type="text" 
@@ -70,7 +70,7 @@ const handleSignup = async () => {
       </div>
       <div class="mb-4 relative">
         <label for="phone" class="block text-gray-700">Phone</label>
-        <i class="pi pi-phone absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-phone absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="phone"
           type="text" 
@@ -81,7 +81,7 @@ const handleSignup = async () => {
       </div>
       <div class="mb-4 relative">
         <label for="email" class="block text-gray-700">Email</label>
-        <i class="pi pi-envelope absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-envelope absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="email"
           type="email" 
@@ -93,7 +93,7 @@ const handleSignup = async () => {
       
       <div class="mb-6 relative">
         <label for="password" class="block text-gray-700">Password</label>
-        <i class="pi pi-lock absolute right-3 top-[60%] transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-lock absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="password"
           type="password" 
