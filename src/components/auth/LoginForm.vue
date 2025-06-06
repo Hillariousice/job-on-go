@@ -35,12 +35,12 @@ const handleLogin = async () => {
       
       <div class="mb-4 relative">
         <label for="email" class="block text-gray-700">Email</label>
-        <i class="pi pi-envelope absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400"></i>
+        <i class="pi pi-envelope absolute right-3 top-[70%] transform -translate-y-1/2 text-gray-400"></i>
         <input 
           v-model="email"
           type="email" 
           id="email" 
-          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
@@ -48,14 +48,15 @@ const handleLogin = async () => {
       <div class="mb-6 relative">
         <label for="password" class="block text-gray-700">Password</label>
         <i
-          :class="['absolute right-2 top-2/3 transform -translate-y-1/2 text-gray-400 cursor-pointer', showPassword ? 'pi pi-eye-slash' : 'pi pi-eye']"
+          :class="['absolute right-3 top-[70%] transform -translate-y-1/2 text-gray-400 cursor-pointer', showPassword ? 'pi pi-eye-slash' : 'pi pi-eye']"
           @click="togglePasswordVisibility"
         ></i>
         <input 
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
           id="password" 
-          class="w-full pl-10 pr-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+
           required 
         />
       </div>

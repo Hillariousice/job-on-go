@@ -58,8 +58,8 @@ const  router = createRouter({
     {
       path: '/dashboard',
       component: UserDashboard,
-      meta: { requiresAuth: true }
-    },
+       meta: { requiresAuth: true } },
+
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
