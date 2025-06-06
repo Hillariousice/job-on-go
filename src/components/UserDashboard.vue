@@ -312,7 +312,7 @@ const activeFilterCount = computed(() => {
       <div class="text-center mt-6">
         <button
           @click="goToAddJob"
-          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full focus:outline-none focus:shadow-outline"
+          class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline"
         >
           Add Job
         </button>
