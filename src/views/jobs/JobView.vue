@@ -205,7 +205,7 @@ const handleApplyNow = async () => {
             <p class="mb-4">{{ state.job.description }}</p>
             <h3 class="text-purple-800 text-lg font-bold mb-2">Salary</h3>
             <p class="mb-4">{{ state.job.salary }} / Year</p>
-            <div v-if="state.job.applicantLimit && state.job.applicantLimit > 0" class="mt-4">
+            <div v-if="isOwner && state.job.applicantLimit && state.job.applicantLimit > 0" class="mt-4">
               <h3 class="text-purple-800 text-lg font-bold mb-2">Applicant Limit</h3>
               <p class="mb-4">This job has a limit of {{ state.job.applicantLimit }} applicants. Currently: {{ applicationsCount }} application(s).</p>
             </div>

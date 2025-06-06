@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-purple-700 text-white text-center p-4 mt-8">
+  <footer class="bg-gray-800 text-white text-center p-4 mt-8">
     <p>&copy; {{ new Date().getFullYear() }} AI Recruiter Pro. All rights reserved.</p>
     <!-- You can add more links or information here later -->
   </footer>

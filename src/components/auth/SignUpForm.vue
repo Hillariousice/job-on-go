@@ -57,7 +57,7 @@ const handleSignup = async () => {
           v-model="firstName"
           type="text" 
           id="firstName" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required
         />
       </div>
@@ -68,7 +68,7 @@ const handleSignup = async () => {
           v-model="lastName"
           type="text" 
           id="last-name" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />  
       </div>
@@ -79,7 +79,7 @@ const handleSignup = async () => {
           v-model="phone"
           type="text" 
           id="phone" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
@@ -90,7 +90,7 @@ const handleSignup = async () => {
           v-model="email"
           type="email" 
           id="email" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
@@ -98,7 +98,7 @@ const handleSignup = async () => {
       <div class="mb-6 relative">
         <label for="password" class="block text-gray-700">Password</label>
         <i
-          :class="['absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400 cursor-pointer pi', showPassword ? 'pi-eye' : 'pi-eye-slash']"
+          :class="['absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400 cursor-pointer pi', showPassword ? 'pi-eye-slash' : 'pi-eye']"
           @click="togglePasswordVisibility"
           style="top: 3.00rem;"
         ></i>
@@ -106,7 +106,7 @@ const handleSignup = async () => {
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
           id="password" 
-          class="w-full p-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
+          class="w-full pl-10 pr-10 py-2 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-600"
           required 
         />
       </div>
