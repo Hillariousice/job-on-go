@@ -44,8 +44,7 @@ export const dialogflowProxy = functions.https.onRequest(async (request, respons
     //    firebase functions:config:set dialogflow.client_email="YOUR_SERVICE_ACCOUNT_EMAIL"
     //    firebase functions:config:set dialogflow.private_key="YOUR_PRIVATE_KEY_CONTENT_AS_SINGLE_LINE"
     //    (For private_key, replace newlines with \n if pasting directly, or use a file path during config set if possible)
-    // Then, access them in your function 
-    
+    // Then, access them in your function like this:
     const dialogflowConfig = functions.config().dialogflow;
     const projectId = dialogflowConfig?.project_id;
     const credentials = {
@@ -61,7 +60,6 @@ export const dialogflowProxy = functions.https.onRequest(async (request, respons
       );
       response.status(500).send({ error: "Dialogflow service not configured by the administrator. Missing critical configuration." });
       return;
-
     }
     // --- END OF PLACEHOLDER SECTION ---
 

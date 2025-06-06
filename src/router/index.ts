@@ -15,6 +15,9 @@ import SettingsView from "@/views/SettingsView.vue";
 import ChangePasswordView from "@/views/settings/ChangePasswordView.vue";
 import HelpView from "@/views/settings/HelpView.vue";
 import ManageAccountView from "@/views/settings/ManageAccountView.vue"; // Added ManageAccountView import
+import ForgotPasswordView from '../views/auth/ForgotPasswordView.vue';
+import ResetPasswordView from '../views/auth/ResetPasswordView.vue';
+import VerifyEmailView from '../views/auth/VerifyEmailView.vue';
 import { getAuth } from "firebase/auth";
 
 const  router = createRouter({
@@ -58,8 +61,8 @@ const  router = createRouter({
     {
       path: '/dashboard',
       component: UserDashboard,
-       meta: { requiresAuth: true } },
-
+      meta: { requiresAuth: true }
+    },
     {
       path: '/jobs/edit/:id',
       name: 'edit-job',
@@ -107,6 +110,24 @@ const  router = createRouter({
       name: 'not-found',
       component: NotFoundView
      },
+     {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: ForgotPasswordView,
+      meta: { requiresGuest: true }
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: ResetPasswordView,
+      meta: { requiresGuest: true }
+    },
+    {
+      path: '/verify-email',
+      name: 'verify-email',
+      component: VerifyEmailView,
+      meta: { requiresAuth: true }
+    }
 ]
 });
 router.beforeEach((to, from, next) => {

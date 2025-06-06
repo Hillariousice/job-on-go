@@ -1,6 +1,6 @@
 import { auth, db } from '@/firebaseConfig';
 import type { UserSignup } from '@/types/user';
-import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
+import { createUserWithEmailAndPassword, type AuthError, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 
 export async function signup(userInfo: Omit<UserSignup, 'id' | 'created_at' | 'updated_at' | 'token' | 'email_verified'>) {
@@ -8,6 +8,15 @@ export async function signup(userInfo: Omit<UserSignup, 'id' | 'created_at' | 'u
     // Create user with email and password
     const userCredential = await createUserWithEmailAndPassword(auth, userInfo.email, userInfo.password);
     const user = userCredential.user;
+
+    // Send verification email
+    try {
+      await sendEmailVerification(user);
+      console.log('Verification email sent.');
+    } catch (verificationError) {
+      console.error('Error sending verification email:', verificationError);
+      // Logged, signup proceeds.
+    }
 
     // Prepare user data for Firestore
     const userData: UserSignup = {
