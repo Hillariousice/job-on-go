@@ -98,8 +98,7 @@ const handleSignup = async () => {
       <div class="mb-6 relative">
         <label for="password" class="block text-gray-700">Password</label>
         <i
-          :class="['absolute right-3 top-[70%] transform -translate-y-1/2 text-gray-400 cursor-pointer pi', showPassword ? 'pi-eye' : 'pi-eye-slash']"
-
+          :class="['absolute right-3 top-2/3 transform -translate-y-1/2 text-gray-400 cursor-pointer pi', showPassword ? 'pi-eye-slash' : 'pi-eye']"
           @click="togglePasswordVisibility"
           style="top: 3.00rem;"
         ></i>
