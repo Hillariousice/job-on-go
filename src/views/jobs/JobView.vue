@@ -229,7 +229,7 @@ const handleApplyNow = async () => {
               <button
                 @click="handleApplyNow"
                 :disabled="isApplicationLimitReached"
-                class="bg-purple-500 hover:bg-purple-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline block"
+                class="bg-purple-500 hover:bg-purple-600 text-white text-center font-bold py-2 px-4 rounded-lg w-full focus:outline-none focus:shadow-outline block"
                 :class="{ 'opacity-50 cursor-not-allowed': isApplicationLimitReached }"
               >
                 Apply Now
@@ -248,13 +248,13 @@ const handleApplyNow = async () => {
             <h3 class="text-xl font-bold mb-6">Manage Job</h3>
             <RouterLink
               :to="`/jobs/edit/${jobId}`"
-              class="bg-purple-500 hover:bg-purple-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              class="bg-purple-500 hover:bg-purple-600 text-white text-center font-bold py-2 px-4 rounded-lg w-full focus:outline-none focus:shadow-outline mt-4 block"
             >
               Edit Job
             </RouterLink>
             <button
               @click="deleteJob"
-              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+              class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg w-full focus:outline-none focus:shadow-outline mt-4 block"
             >
               Delete Job
             </button>
