@@ -331,7 +331,7 @@ const handleFileSelection = (event: Event) => {
         <button
           type="submit"
           :disabled="isLoading"
-          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline disabled:bg-purple-300"
+          class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg w-full focus:outline-none focus:shadow-outline disabled:bg-purple-300"
         >
           <span v-if="isLoading">Updating...</span>
           <span v-else>Update Profile</span>
